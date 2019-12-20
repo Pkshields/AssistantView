@@ -8,6 +8,8 @@
     <em>most HTML tags may be used</em>
     ]]></description>
 
+    <idea-version since-build="2019.3"/>
+
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
@@ -19,4 +21,8 @@
     <actions>
         <!-- Add your actions here -->
     </actions>
+
+    <projectListeners>
+        <listener class="dev.paulshields.assistantview.AssistantView" topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+    </projectListeners>
 </idea-plugin>
