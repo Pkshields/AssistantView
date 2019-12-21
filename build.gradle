@@ -14,6 +14,12 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version '2019.3'
