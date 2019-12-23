@@ -30,4 +30,4 @@ Run `./gradlew test` to execute the unit tests. The tests are written using the 
 
 ### Linter
 
-Run `./gradlew check` to run the linter, [ktlint](https://github.com/pinterest/ktlint)
+Run `./gradlew check` to run the linter, [ktlint](https://github.com/pinterest/ktlint).
