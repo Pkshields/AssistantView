@@ -16,13 +16,9 @@
     <depends>org.jetbrains.kotlin</depends>
     <depends>com.intellij.java</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
-    </extensions>
-
-    <actions>
-        <!-- Add your actions here -->
-    </actions>
+    <applicationListeners>
+        <listener class="dev.paulshields.assistantview.DependencyInjectionListener" topic="com.intellij.ide.AppLifecycleListener" />
+    </applicationListeners>
 
     <projectListeners>
         <listener class="dev.paulshields.assistantview.AssistantView" topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
