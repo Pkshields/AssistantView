@@ -21,6 +21,6 @@
     </applicationListeners>
 
     <projectListeners>
-        <listener class="dev.paulshields.assistantview.AssistantView" topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+        <listener class="dev.paulshields.assistantview.OpenFileAssistantListener" topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
     </projectListeners>
 </idea-plugin>

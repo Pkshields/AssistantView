@@ -23,7 +23,7 @@ class AssistantViewClassTest {
         val target = AssistantViewClass(psiClass)
         val result = target.baseClass
 
-        assertThat(result?.psiClass, equalTo(baseClass))
+        assertThat(result?.underlyingPsiClass, equalTo(baseClass))
     }
 
     @Test
@@ -43,7 +43,7 @@ class AssistantViewClassTest {
         val target = AssistantViewClass(psiClass)
         val result = target.baseClass
 
-        assertThat(result?.psiClass, equalTo(baseClassOne))
+        assertThat(result?.underlyingPsiClass, equalTo(baseClassOne))
     }
 
     @Test
@@ -56,8 +56,8 @@ class AssistantViewClassTest {
         val result = target.interfaces
 
         assertThat(result.size, equalTo(2))
-        assertThat(result[0].psiClass, equalTo(interfaceOne))
-        assertThat(result[1].psiClass, equalTo(interfaceTwo))
+        assertThat(result[0].underlyingPsiClass, equalTo(interfaceOne))
+        assertThat(result[1].underlyingPsiClass, equalTo(interfaceTwo))
     }
 
     @Test
