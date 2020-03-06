@@ -7,7 +7,9 @@ import com.intellij.psi.PsiManager
 import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import dev.paulshields.assistantview.sourcefiles.AssistantViewClass
 import dev.paulshields.assistantview.testcommon.mock
+import dev.paulshields.assistantview.testcommon.relaxedMock
 import io.mockk.every
 import org.jetbrains.kotlin.psi.KtFile
 import org.junit.Ignore
@@ -45,10 +47,27 @@ class FileManagerServiceTest {
     }
 
     @Test
-    @Ignore("To be implemented when we switch to MockK")
-    fun `test should get file containing class from project`() { }
+    fun `test should get file containing class from project`() {
+        val assistantViewClass = mock<AssistantViewClass>().apply {
+            every { underlyingPsiClass.containingFile.virtualFile } returns virtualFile
+        }
+        val psiFileBehindVirtualFile = relaxedMock<KtFile>()
+        every { psiManager.findFile(virtualFile) } returns psiFileBehindVirtualFile
+
+        val result = target.getFileFromProject(assistantViewClass, project)
+
+        assertThat(result?.underlyingPsiFile, equalTo(psiFileBehindVirtualFile as PsiFile))
+    }
 
     @Test
-    @Ignore("To be implemented when we switch to MockK")
-    fun `test should handle class which is not in project`() { }
+    fun `test should handle class which is not in project`() {
+        val assistantViewClass = mock<AssistantViewClass>().apply {
+            every { underlyingPsiClass.containingFile.virtualFile } returns virtualFile
+        }
+        every { psiManager.findFile(virtualFile) } returns null
+
+        val result = target.getFileFromProject(assistantViewClass, project)
+
+        assertThat(result?.underlyingPsiFile, absent())
+    }
 }
