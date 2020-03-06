@@ -5,23 +5,23 @@ import com.intellij.psi.PsiFile
 import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import dev.paulshields.assistantview.testcommon.mock
+import dev.paulshields.assistantview.testcommon.relaxedMock
+import io.mockk.every
 import org.apache.commons.lang.NotImplementedException
 import org.jetbrains.kotlin.psi.KtFile
 import org.junit.Test
 
 class AssistantViewFileTest {
 
-    private val ktFile = mock<KtFile> {
-        on { classes } doReturn emptyArray()
+    private val ktFile = mock<KtFile>().apply {
+        every { classes } returns emptyArray()
     }
 
     @Test
     fun `test should return class list from kotlin file`() {
-        val psiClass = mock<PsiClass>()
-        whenever(ktFile.classes).thenReturn(arrayOf(psiClass))
+        val psiClass = relaxedMock<PsiClass>()
+        every { ktFile.classes } returns arrayOf(psiClass)
 
         val target = AssistantViewFile(ktFile)
         val result = target.classes
@@ -48,8 +48,8 @@ class AssistantViewFileTest {
 
     @Test
     fun `test should define first class in class list as main class`() {
-        val psiClass = mock<PsiClass>()
-        whenever(ktFile.classes).thenReturn(arrayOf(psiClass))
+        val psiClass = relaxedMock<PsiClass>()
+        every { ktFile.classes } returns arrayOf(psiClass)
 
         val target = AssistantViewFile(ktFile)
         val result = target.mainClass

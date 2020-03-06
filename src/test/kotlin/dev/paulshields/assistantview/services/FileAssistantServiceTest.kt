@@ -4,11 +4,10 @@ import com.intellij.openapi.project.Project
 import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import dev.paulshields.assistantview.sourcefiles.AssistantViewClass
 import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
+import dev.paulshields.assistantview.testcommon.mock
+import io.mockk.every
 import org.junit.Test
 
 class FileAssistantServiceTest {
@@ -16,9 +15,12 @@ class FileAssistantServiceTest {
     private val fileManagerService = mock<FileManagerService>()
 
     private val project = mock<Project>()
-    private val assistantViewClass = mock<AssistantViewClass>()
-    private val assistantViewFile = mock<AssistantViewFile> {
-        on { mainClass } doReturn assistantViewClass
+    private val assistantViewClass = mock<AssistantViewClass>().apply {
+        every { baseClass } returns null
+        every { interfaces } returns emptyList()
+    }
+    private val assistantViewFile = mock<AssistantViewFile>().apply {
+        every { mainClass } returns assistantViewClass
     }
 
     private val target = FileAssistantService(fileManagerService)
@@ -27,8 +29,8 @@ class FileAssistantServiceTest {
     fun `test should return file containing counterpart base class`() {
         val fileContainingBaseClass = mock<AssistantViewFile>()
         val baseClass = mock<AssistantViewClass>()
-        whenever(assistantViewClass.baseClass).thenReturn(baseClass)
-        whenever(fileManagerService.getFileFromProject(baseClass, project)).thenReturn(fileContainingBaseClass)
+        every { assistantViewClass.baseClass } returns baseClass
+        every { fileManagerService.getFileFromProject(baseClass, project) } returns fileContainingBaseClass
 
         val result = target.getCounterpartFile(assistantViewFile, project)
 
@@ -40,8 +42,8 @@ class FileAssistantServiceTest {
         val fileContainingInterface = mock<AssistantViewFile>()
         val firstInterface = mock<AssistantViewClass>()
         val secondInterface = mock<AssistantViewClass>()
-        whenever(assistantViewClass.interfaces).thenReturn(listOf(firstInterface, secondInterface))
-        whenever(fileManagerService.getFileFromProject(firstInterface, project)).thenReturn(fileContainingInterface)
+        every { assistantViewClass.interfaces } returns listOf(firstInterface, secondInterface)
+        every { fileManagerService.getFileFromProject(firstInterface, project) } returns fileContainingInterface
 
         val result = target.getCounterpartFile(assistantViewFile, project)
 
@@ -50,7 +52,7 @@ class FileAssistantServiceTest {
 
     @Test
     fun `test should handle file with no classes in it`() {
-        whenever(assistantViewFile.mainClass).thenReturn(null)
+        every { assistantViewFile.mainClass } returns null
 
         val result = target.getCounterpartFile(assistantViewFile, project)
 
@@ -59,9 +61,9 @@ class FileAssistantServiceTest {
 
     @Test
     fun `test should handle class with no base class or interfaces`() {
-        whenever(assistantViewFile.mainClass).thenReturn(assistantViewClass)
-        whenever(assistantViewClass.baseClass).thenReturn(null)
-        whenever(assistantViewClass.interfaces).thenReturn(emptyList())
+        every { assistantViewFile.mainClass } returns assistantViewClass
+        every { assistantViewClass.baseClass } returns null
+        every { assistantViewClass.interfaces } returns emptyList()
 
         val result = target.getCounterpartFile(assistantViewFile, project)
 

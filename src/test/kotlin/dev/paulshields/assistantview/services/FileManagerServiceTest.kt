@@ -7,9 +7,8 @@ import com.intellij.psi.PsiManager
 import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import dev.paulshields.assistantview.testcommon.mock
+import io.mockk.every
 import org.jetbrains.kotlin.psi.KtFile
 import org.junit.Ignore
 import org.junit.Test
@@ -19,8 +18,8 @@ class FileManagerServiceTest {
     private val virtualFile = mock<VirtualFile>()
     private val psiManager = mock<PsiManager>()
 
-    private val project = mock<Project> {
-        on { getService(PsiManager::class.java) } doReturn psiManager
+    private val project = mock<Project>().apply {
+        every { getService(PsiManager::class.java) } returns psiManager
     }
 
     private val target = FileManagerService()
@@ -29,7 +28,7 @@ class FileManagerServiceTest {
     @Ignore("To be fixed when AssistantViewFile makes liberal use of the lazy")
     fun `test should get file from project using virtual files`() {
         val psiFileBehindVirtualFile = mock<KtFile>()
-        whenever(psiManager.findFile(virtualFile)).thenReturn(psiFileBehindVirtualFile)
+        every { psiManager.findFile(virtualFile) } returns psiFileBehindVirtualFile
 
         val result = target.getFileFromProject(virtualFile, project)
 
@@ -38,7 +37,7 @@ class FileManagerServiceTest {
 
     @Test
     fun `test should handle virtual file which is not in project`() {
-        whenever(psiManager.findFile(virtualFile)).thenReturn(null)
+        every { psiManager.findFile(virtualFile) } returns null
 
         val result = target.getFileFromProject(virtualFile, project)
 

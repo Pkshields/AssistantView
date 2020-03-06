@@ -6,18 +6,18 @@ import com.intellij.psi.PsiReferenceList
 import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import dev.paulshields.assistantview.testcommon.mock
+import dev.paulshields.assistantview.testcommon.relaxedMock
+import io.mockk.every
 import org.junit.Test
 
 class AssistantViewClassTest {
 
-    private val psiClass = mock<PsiClass>()
+    private val psiClass = relaxedMock<PsiClass>()
 
     @Test
     fun `test should return one base class`() {
-        val baseClass = mock<PsiClass>()
+        val baseClass = relaxedMock<PsiClass>()
         givenMockClassExtendsBaseClass(baseClass)
 
         val target = AssistantViewClass(psiClass)
@@ -36,8 +36,8 @@ class AssistantViewClassTest {
 
     @Test
     fun `test should return first base class is multiple are specified`() {
-        val baseClassOne = mock<PsiClass>()
-        val baseClassTwo = mock<PsiClass>()
+        val baseClassOne = relaxedMock<PsiClass>()
+        val baseClassTwo = relaxedMock<PsiClass>()
         givenMockClassExtendsBaseClass(baseClassOne, baseClassTwo)
 
         val target = AssistantViewClass(psiClass)
@@ -48,8 +48,8 @@ class AssistantViewClassTest {
 
     @Test
     fun `test should return interfaces`() {
-        val interfaceOne = mock<PsiClass>()
-        val interfaceTwo = mock<PsiClass>()
+        val interfaceOne = relaxedMock<PsiClass>()
+        val interfaceTwo = relaxedMock<PsiClass>()
         givenMockClassImplementsInterfaces(interfaceOne, interfaceTwo)
 
         val target = AssistantViewClass(psiClass)
@@ -70,27 +70,27 @@ class AssistantViewClassTest {
 
     private fun givenMockClassExtendsBaseClass(vararg psiClasses: PsiClass) {
         val referenceElements = psiClasses.map { psiClass ->
-            mock<PsiJavaCodeReferenceElement> {
-                on { resolve() } doReturn psiClass
+            mock<PsiJavaCodeReferenceElement>().apply {
+                every { resolve() } returns psiClass
             }
         }.toTypedArray()
 
         val extendsList = mock<PsiReferenceList>()
-        whenever(extendsList.referenceElements).thenReturn(referenceElements)
+        every { extendsList.referenceElements } returns referenceElements
 
-        whenever(psiClass.extendsList).thenReturn(extendsList)
+        every { psiClass.extendsList } returns extendsList
     }
 
     private fun givenMockClassImplementsInterfaces(vararg psiClasses: PsiClass) {
         val referenceElements = psiClasses.map { psiClass ->
-            mock<PsiJavaCodeReferenceElement> {
-                on { resolve() } doReturn psiClass
+            mock<PsiJavaCodeReferenceElement>().apply {
+                every { resolve() } returns psiClass
             }
         }.toTypedArray()
 
         val implementsList = mock<PsiReferenceList>()
-        whenever(implementsList.referenceElements).thenReturn(referenceElements)
+        every { implementsList.referenceElements } returns referenceElements
 
-        whenever(psiClass.implementsList).thenReturn(implementsList)
+        every { psiClass.implementsList } returns implementsList
     }
 }
