@@ -17,7 +17,7 @@ class AssistantViewClassTest {
 
     @Test
     fun `test should return one base class`() {
-        val baseClass = relaxedMock<PsiClass>()
+        val baseClass = mock<PsiClass>()
         givenMockClassExtendsBaseClass(baseClass)
 
         val target = AssistantViewClass(psiClass)
@@ -36,8 +36,8 @@ class AssistantViewClassTest {
 
     @Test
     fun `test should return first base class is multiple are specified`() {
-        val baseClassOne = relaxedMock<PsiClass>()
-        val baseClassTwo = relaxedMock<PsiClass>()
+        val baseClassOne = mock<PsiClass>()
+        val baseClassTwo = mock<PsiClass>()
         givenMockClassExtendsBaseClass(baseClassOne, baseClassTwo)
 
         val target = AssistantViewClass(psiClass)
@@ -48,8 +48,8 @@ class AssistantViewClassTest {
 
     @Test
     fun `test should return interfaces`() {
-        val interfaceOne = relaxedMock<PsiClass>()
-        val interfaceTwo = relaxedMock<PsiClass>()
+        val interfaceOne = mock<PsiClass>()
+        val interfaceTwo = mock<PsiClass>()
         givenMockClassImplementsInterfaces(interfaceOne, interfaceTwo)
 
         val target = AssistantViewClass(psiClass)

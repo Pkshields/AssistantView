@@ -9,10 +9,8 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import dev.paulshields.assistantview.sourcefiles.AssistantViewClass
 import dev.paulshields.assistantview.testcommon.mock
-import dev.paulshields.assistantview.testcommon.relaxedMock
 import io.mockk.every
 import org.jetbrains.kotlin.psi.KtFile
-import org.junit.Ignore
 import org.junit.Test
 
 class FileManagerServiceTest {
@@ -27,7 +25,6 @@ class FileManagerServiceTest {
     private val target = FileManagerService()
 
     @Test
-    @Ignore("To be fixed when AssistantViewFile makes liberal use of the lazy")
     fun `test should get file from project using virtual files`() {
         val psiFileBehindVirtualFile = mock<KtFile>()
         every { psiManager.findFile(virtualFile) } returns psiFileBehindVirtualFile
@@ -51,7 +48,7 @@ class FileManagerServiceTest {
         val assistantViewClass = mock<AssistantViewClass>().apply {
             every { underlyingPsiClass.containingFile.virtualFile } returns virtualFile
         }
-        val psiFileBehindVirtualFile = relaxedMock<KtFile>()
+        val psiFileBehindVirtualFile = mock<KtFile>()
         every { psiManager.findFile(virtualFile) } returns psiFileBehindVirtualFile
 
         val result = target.getFileFromProject(assistantViewClass, project)

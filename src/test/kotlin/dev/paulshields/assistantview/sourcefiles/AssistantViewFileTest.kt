@@ -6,7 +6,6 @@ import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import dev.paulshields.assistantview.testcommon.mock
-import dev.paulshields.assistantview.testcommon.relaxedMock
 import io.mockk.every
 import org.apache.commons.lang.NotImplementedException
 import org.jetbrains.kotlin.psi.KtFile
@@ -20,7 +19,7 @@ class AssistantViewFileTest {
 
     @Test
     fun `test should return class list from kotlin file`() {
-        val psiClass = relaxedMock<PsiClass>()
+        val psiClass = mock<PsiClass>()
         every { ktFile.classes } returns arrayOf(psiClass)
 
         val target = AssistantViewFile(ktFile)
@@ -48,7 +47,7 @@ class AssistantViewFileTest {
 
     @Test
     fun `test should define first class in class list as main class`() {
-        val psiClass = relaxedMock<PsiClass>()
+        val psiClass = mock<PsiClass>()
         every { ktFile.classes } returns arrayOf(psiClass)
 
         val target = AssistantViewFile(ktFile)
