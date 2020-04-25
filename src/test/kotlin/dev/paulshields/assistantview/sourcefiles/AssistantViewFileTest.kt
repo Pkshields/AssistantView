@@ -1,5 +1,6 @@
 package dev.paulshields.assistantview.sourcefiles
 
+import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiFile
 import com.natpryce.hamkrest.absent
@@ -8,6 +9,7 @@ import com.natpryce.hamkrest.equalTo
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
 import org.apache.commons.lang.NotImplementedException
+import org.jetbrains.kotlin.idea.KotlinFileType
 import org.jetbrains.kotlin.psi.KtFile
 import org.junit.Test
 
@@ -62,5 +64,16 @@ class AssistantViewFileTest {
         val result = target.mainClass
 
         assertThat(result, absent())
+    }
+
+    @Test
+    fun `test should provide file type`() {
+        val fileType: FileType = KotlinFileType.INSTANCE
+        every { ktFile.fileType } returns fileType
+        val target = AssistantViewFile(ktFile)
+
+        val result = target.fileType
+
+        assertThat(result, equalTo(fileType))
     }
 }

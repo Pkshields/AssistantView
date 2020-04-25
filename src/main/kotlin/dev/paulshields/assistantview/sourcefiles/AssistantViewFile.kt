@@ -22,5 +22,9 @@ class AssistantViewFile constructor(val underlyingPsiFile: PsiFile) {
         if (classes.count() > 0) classes[0] else null
     }
 
+    val fileType by lazy {
+        underlyingPsiFile.fileType
+    }
+
     override fun toString() = underlyingPsiFile.name
 }
