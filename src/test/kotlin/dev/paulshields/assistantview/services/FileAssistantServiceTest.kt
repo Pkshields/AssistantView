@@ -11,7 +11,6 @@ import io.mockk.every
 import org.junit.Test
 
 class FileAssistantServiceTest {
-
     private val fileManagerService = mock<FileManagerService>()
 
     private val project = mock<Project>()

@@ -14,7 +14,6 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.junit.Test
 
 class AssistantViewFileTest {
-
     private val ktFile = mock<KtFile>().apply {
         every { classes } returns emptyArray()
     }

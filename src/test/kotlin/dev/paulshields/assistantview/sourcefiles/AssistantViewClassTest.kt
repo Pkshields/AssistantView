@@ -12,7 +12,6 @@ import io.mockk.every
 import org.junit.Test
 
 class AssistantViewClassTest {
-
     private val psiClass = relaxedMock<PsiClass>()
 
     @Test

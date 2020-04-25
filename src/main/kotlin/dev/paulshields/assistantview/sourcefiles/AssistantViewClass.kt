@@ -3,7 +3,6 @@ package dev.paulshields.assistantview.sourcefiles
 import com.intellij.psi.PsiClass
 
 class AssistantViewClass(val underlyingPsiClass: PsiClass) {
-
     val baseClass by lazy {
         underlyingPsiClass.extendsList
             ?.referenceElements

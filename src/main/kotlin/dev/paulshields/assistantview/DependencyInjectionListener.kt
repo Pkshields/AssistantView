@@ -10,7 +10,6 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 class DependencyInjectionListener : AppLifecycleListener {
-
     private val module = module {
         single { FileAssistantService(get()) }
         single { FileManagerService() }

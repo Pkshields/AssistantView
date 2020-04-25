@@ -7,7 +7,6 @@ import dev.paulshields.assistantview.sourcefiles.AssistantViewClass
 import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
 
 class FileManagerService {
-
     fun getFileFromProject(rawVirtualFile: VirtualFile, project: Project) =
         project.getService(PsiManager::class.java)
             .findFile(rawVirtualFile)

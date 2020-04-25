@@ -8,7 +8,6 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class OpenFileAssistantListener : FileEditorManagerListener, KoinComponent {
-
     private val fileAssistantService: FileAssistantService by inject()
     private val fileManagerService: FileManagerService by inject()
 

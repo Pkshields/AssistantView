@@ -14,7 +14,6 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.junit.Test
 
 class FileManagerServiceTest {
-
     private val virtualFile = mock<VirtualFile>()
     private val psiManager = mock<PsiManager>()
 
