@@ -21,7 +21,7 @@
     </applicationListeners>
 
     <projectListeners>
-        <listener class="dev.paulshields.assistantview.OpenFileAssistantListener" topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
+        <listener class="dev.paulshields.assistantview.FileOpenedListener" topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
     </projectListeners>
 
     <extensions defaultExtensionNs="com.intellij">

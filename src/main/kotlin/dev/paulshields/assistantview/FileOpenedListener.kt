@@ -8,7 +8,7 @@ import dev.paulshields.assistantview.services.FileManagerService
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class OpenFileAssistantListener : FileEditorManagerListener, KoinComponent {
+class FileOpenedListener : FileEditorManagerListener, KoinComponent {
     private val fileAssistantService: FileAssistantService by inject()
     private val fileManagerService: FileManagerService by inject()
     private val assistantViewService: AssistantViewService by inject()
