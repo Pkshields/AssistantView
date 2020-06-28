@@ -18,5 +18,12 @@ class AssistantViewClass(val underlyingPsiClass: PsiClass) {
             ?.map(::AssistantViewClass) ?: emptyList()
     }
 
-    override fun toString() = underlyingPsiClass.name.orEmpty()
+    val properties by lazy {
+        underlyingPsiClass.fields
+            .map(::AssistantViewProperty)
+    }
+
+    val name = underlyingPsiClass.name.orEmpty()
+
+    override fun toString() = name
 }

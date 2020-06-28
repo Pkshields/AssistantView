@@ -26,5 +26,7 @@ class AssistantViewFile constructor(val underlyingPsiFile: PsiFile) {
         underlyingPsiFile.fileType
     }
 
-    override fun toString() = underlyingPsiFile.name
+    val name = underlyingPsiFile.name
+
+    override fun toString() = name
 }

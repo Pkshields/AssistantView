@@ -6,7 +6,7 @@ import com.intellij.psi.PsiFile
 import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import dev.paulshields.assistantview.testcommon.mock
+import dev.paulshields.assistantview.testcommon.relaxedMock
 import io.mockk.every
 import org.apache.commons.lang.NotImplementedException
 import org.jetbrains.kotlin.idea.KotlinFileType
@@ -14,13 +14,13 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.junit.Test
 
 class AssistantViewFileTest {
-    private val ktFile = mock<KtFile>().apply {
+    private val ktFile = relaxedMock<KtFile>().apply {
         every { classes } returns emptyArray()
     }
 
     @Test
     fun `test should return class list from kotlin file`() {
-        val psiClass = mock<PsiClass>()
+        val psiClass = relaxedMock<PsiClass>()
         every { ktFile.classes } returns arrayOf(psiClass)
 
         val target = AssistantViewFile(ktFile)
@@ -40,7 +40,7 @@ class AssistantViewFileTest {
 
     @Test(expected = NotImplementedException::class)
     fun `test should throw exception when getting class list if psifile is not supported`() {
-        val unsupportedPsiFile = mock<PsiFile>()
+        val unsupportedPsiFile = relaxedMock<PsiFile>()
 
         val target = AssistantViewFile(unsupportedPsiFile)
         val result = target.classes
@@ -48,7 +48,7 @@ class AssistantViewFileTest {
 
     @Test
     fun `test should define first class in class list as main class`() {
-        val psiClass = mock<PsiClass>()
+        val psiClass = relaxedMock<PsiClass>()
         every { ktFile.classes } returns arrayOf(psiClass)
 
         val target = AssistantViewFile(ktFile)
@@ -74,5 +74,15 @@ class AssistantViewFileTest {
         val result = target.fileType
 
         assertThat(result, equalTo(fileType))
+    }
+
+    @Test
+    fun `test should have name`() {
+        every { ktFile.name } returns "GoodFileName"
+
+        val target = AssistantViewFile(ktFile)
+        val result = target.name
+
+        assertThat(result, equalTo(ktFile.name))
     }
 }
