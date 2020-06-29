@@ -9,6 +9,8 @@ import com.intellij.psi.PsiManager
 import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import dev.paulshields.assistantview.intellijwrappers.FilenameIndex
+import dev.paulshields.assistantview.intellijwrappers.PsiTypesUtil
 import dev.paulshields.assistantview.sourcefiles.AssistantViewClass
 import dev.paulshields.assistantview.sourcefiles.AssistantViewType
 import dev.paulshields.assistantview.testcommon.mock
@@ -25,7 +27,7 @@ class FileManagerServiceTest {
         every { getService(PsiManager::class.java) } returns psiManager
     }
 
-    private val target = FileManagerService()
+    private val target = FileManagerService(FilenameIndex(), PsiTypesUtil())
 
     @Test
     fun `test should get file from project using virtual files`() {
