@@ -2,13 +2,17 @@ package dev.paulshields.assistantview.services
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiClassType
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import dev.paulshields.assistantview.sourcefiles.AssistantViewClass
+import dev.paulshields.assistantview.sourcefiles.AssistantViewType
 import dev.paulshields.assistantview.testcommon.mock
+import dev.paulshields.assistantview.testcommon.relaxedMock
 import io.mockk.every
 import org.jetbrains.kotlin.psi.KtFile
 import org.junit.Test
@@ -25,7 +29,7 @@ class FileManagerServiceTest {
 
     @Test
     fun `test should get file from project using virtual files`() {
-        val psiFileBehindVirtualFile = mock<KtFile>()
+        val psiFileBehindVirtualFile = relaxedMock<KtFile>()
         every { psiManager.findFile(virtualFile) } returns psiFileBehindVirtualFile
 
         val result = target.getFileFromProject(virtualFile, project)
@@ -47,7 +51,7 @@ class FileManagerServiceTest {
         val assistantViewClass = mock<AssistantViewClass>().apply {
             every { underlyingPsiClass.containingFile.virtualFile } returns virtualFile
         }
-        val psiFileBehindVirtualFile = mock<KtFile>()
+        val psiFileBehindVirtualFile = relaxedMock<KtFile>()
         every { psiManager.findFile(virtualFile) } returns psiFileBehindVirtualFile
 
         val result = target.getFileFromProject(assistantViewClass, project)
@@ -63,6 +67,43 @@ class FileManagerServiceTest {
         every { psiManager.findFile(virtualFile) } returns null
 
         val result = target.getFileFromProject(assistantViewClass, project)
+
+        assertThat(result?.underlyingPsiFile, absent())
+    }
+
+    @Test
+    fun `test should get file from type`() {
+        val psiClass = relaxedMock<PsiClass>().apply {
+            every { containingFile.virtualFile } returns virtualFile
+        }
+        val psiClassType = mock<PsiClassType>().apply {
+            every { resolve() } returns psiClass
+        }
+        val assistantViewType = mock<AssistantViewType>().apply {
+            every { underlyingPsiType } returns psiClassType
+        }
+        val psiFileBehindVirtualFile = relaxedMock<KtFile>()
+        every { psiManager.findFile(virtualFile) } returns psiFileBehindVirtualFile
+
+        val result = target.getFileFromProject(assistantViewType, project)
+
+        assertThat(result?.underlyingPsiFile, equalTo(psiFileBehindVirtualFile as PsiFile))
+    }
+
+    @Test
+    fun `test should handle when file for type is not in project`() {
+        val psiClass = relaxedMock<PsiClass>().apply {
+            every { containingFile.virtualFile } returns virtualFile
+        }
+        val psiClassType = mock<PsiClassType>().apply {
+            every { resolve() } returns psiClass
+        }
+        val assistantViewType = mock<AssistantViewType>().apply {
+            every { underlyingPsiType } returns psiClassType
+        }
+        every { psiManager.findFile(virtualFile) } returns null
+
+        val result = target.getFileFromProject(assistantViewType, project)
 
         assertThat(result?.underlyingPsiFile, absent())
     }
