@@ -1,0 +1,18 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 150
+tab_width = 4
+ij_continuation_indent_size = 8
+
+[{*.kt,*.kts}]
+disabled_rules = chain-wrapping,indent,parameter-list-wrapping
+
+# chain-wrapping is disabled because of this decision: https://github.com/pinterest/ktlint/issues/805
+# indent is disabled because of this ongoing discussion (Missing newline before): https://github.com/pinterest/ktlint/issues/764
+# parameter-list-wrapping is disabled because it triggers the exact same failure as discussed in the issue/rule above.

@@ -1,0 +1,4 @@
+style:
+    active: true
+    MagicNumber:
+        active: false

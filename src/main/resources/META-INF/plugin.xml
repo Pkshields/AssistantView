@@ -1,0 +1,11 @@
+<idea-plugin>
+    <id>dev.paulshields.AssistantView</id>
+    <name>Assistant View</name>
+    <vendor url="http://paulshields.dev">Paul Shields</vendor>
+
+    <description><![CDATA[
+    Plugin for JetBrains IDEs to provide an XCode inspired Assistant View.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+</idea-plugin>
