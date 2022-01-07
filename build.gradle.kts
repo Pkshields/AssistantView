@@ -18,6 +18,7 @@ intellij {
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io")
 }
 
 tasks.withType<KotlinCompile> {
@@ -39,10 +40,15 @@ tasks.test {
 dependencies {
     implementation(kotlin("stdlib"))
 
+    implementation("dev.paulshields:lok:1.0")
+    implementation("io.insert-koin:koin-core:3.1.5")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
     testImplementation("io.mockk:mockk:1.12.1")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+    testImplementation("io.insert-koin:koin-test:3.1.5")
+    testImplementation("io.insert-koin:koin-test-junit5:3.1.5")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
