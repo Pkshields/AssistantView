@@ -8,6 +8,7 @@
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.kotlin</depends>
 
     <applicationListeners>
         <listener class="dev.paulshields.assistantview.DependencyInjector" topic="com.intellij.ide.AppLifecycleListener" />

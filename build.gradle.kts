@@ -14,6 +14,7 @@ plugins {
 
 intellij {
     version.set("2021.3.1")
+    plugins.set(listOf("org.jetbrains.kotlin"))
 }
 
 repositories {
