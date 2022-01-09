@@ -5,9 +5,12 @@ import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
+import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiClass
+import dev.paulshields.assistantview.extensions.extendsClass
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
+import io.mockk.mockkStatic
 import org.junit.jupiter.api.Test
 
 class AssistantViewClassTest {
@@ -15,19 +18,22 @@ class AssistantViewClassTest {
     private val superClass = psiClassWithName("")
     private val interfaces = arrayOf(psiClassWithName(""), psiClassWithName(""), psiClassWithName(""))
     private val psiClass = psiClassWithName(className)
+    private val project = mock<Project>()
 
-    private val target = AssistantViewClass(psiClass)
+    private val target = AssistantViewClass(psiClass, project)
 
     @Test
     fun `should get super class`() {
-        every { psiClass.superClass } returns superClass
+        mockkStatic(PsiClass::extendsClass)
+        every { psiClass.extendsClass } returns superClass
 
         assertThat(target.superClass?.psiClass).isEqualTo(superClass)
     }
 
     @Test
     fun `should return null if class has no super class`() {
-        every { psiClass.superClass } returns null
+        mockkStatic(PsiClass::extendsClass)
+        every { psiClass.extendsClass } returns null
 
         assertThat(target.superClass).isNull()
     }

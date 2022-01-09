@@ -3,10 +3,18 @@ package dev.paulshields.assistantview.sourcefiles
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiClass
+import dev.paulshields.assistantview.testcommon.mock
+import io.mockk.every
 import org.junit.jupiter.api.Test
 
 abstract class AssistantViewFileTest {
     protected val fileName = "ClassName"
+    protected val project = mock<Project>()
+    protected val mainClass = mock<PsiClass>().apply {
+        every { name } returns "ClassName"
+    }
 
     abstract val target: AssistantViewFile
 
@@ -18,6 +26,11 @@ abstract class AssistantViewFileTest {
     @Test
     fun `should get classes`() {
         assertThat(target.classes).hasSize(2)
+    }
+
+    @Test
+    fun `should get main class`() {
+        assertThat(target.mainClass?.psiClass).isEqualTo(mainClass)
     }
 
     @Test
