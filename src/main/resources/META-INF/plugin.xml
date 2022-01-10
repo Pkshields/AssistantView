@@ -17,4 +17,8 @@
     <projectListeners>
         <listener class="dev.paulshields.assistantview.FileOpenedListener" topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
     </projectListeners>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Assistant View" anchor="right" factoryClass="dev.paulshields.assistantview.AssistantView" />
+    </extensions>
 </idea-plugin>
