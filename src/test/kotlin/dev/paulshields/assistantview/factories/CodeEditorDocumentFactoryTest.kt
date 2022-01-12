@@ -34,20 +34,20 @@ class CodeEditorDocumentFactoryTest {
 
     @Test
     fun `should create code editor from assistant view file`() {
-        every { psiDocumentManager.getDocument(psiFile) } returns null
-
-        val result = target.getEditorDocument(assistantViewFile)
-
-        assertThat(result).isNull()
-    }
-
-    @Test
-    fun `should not create code editor from assistant view file if no associated document`() {
         every { psiDocumentManager.getDocument(psiFile) } returns document
 
         val result = target.getEditorDocument(assistantViewFile)
 
         assertThat(result).isEqualTo(document)
+    }
+
+    @Test
+    fun `should not create code editor from assistant view file if no associated document`() {
+        every { psiDocumentManager.getDocument(psiFile) } returns null
+
+        val result = target.getEditorDocument(assistantViewFile)
+
+        assertThat(result).isNull()
     }
 
     @Test

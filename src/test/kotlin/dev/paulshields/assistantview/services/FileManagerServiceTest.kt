@@ -22,12 +22,8 @@ class FileManagerServiceTest {
     private val project = mock<Project>().apply {
         every { getService(PsiManager::class.java) } returns psiManager
     }
-    private val kotlinFile = mock<KtFile>().apply {
-        every { name } returns "KotlinFile"
-    }
-    private val unsupportedFile = mock<PsiFile>().apply {
-        every { name } returns "UnsupportedFile"
-    }
+    private val kotlinFile = mock<KtFile>()
+    private val unsupportedFile = mock<PsiFile>()
     private val assistantViewClass = mock<AssistantViewClass>().apply {
         every { psiClass.containingFile.virtualFile } returns virtualFile
         every { project } returns this@FileManagerServiceTest.project
