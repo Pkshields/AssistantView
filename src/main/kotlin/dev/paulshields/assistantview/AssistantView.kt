@@ -1,31 +1,39 @@
 package dev.paulshields.assistantview
 
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileTypes.PlainTextFileType
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
-import com.intellij.openapi.wm.ToolWindowFactory
 import dev.paulshields.assistantview.factories.CodeEditorDocumentFactory
 import dev.paulshields.assistantview.factories.CodeEditorFactory
 import dev.paulshields.assistantview.factories.ToolWindowContentFactory
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class AssistantView : ToolWindowFactory, KoinComponent {
-    private val codeEditorFactory: CodeEditorFactory by inject()
-    private val codeEditorDocumentFactory: CodeEditorDocumentFactory by inject()
-    private val toolWindowContentFactory: ToolWindowContentFactory by inject()
+class AssistantView(
+    private val codeEditorDocumentFactory: CodeEditorDocumentFactory,
+    private val toolWindowContentFactory: ToolWindowContentFactory,
+    private val codeEditorFactory: CodeEditorFactory,
+    private val toolWindow: ToolWindow,
+    private val project: Project) : Disposable {
 
-    private lateinit var toolWindow: ToolWindow
-    private lateinit var project: Project
+    private val editor: Editor = createEmptyEditor()
 
-    override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        this.toolWindow = toolWindow
-        this.project = project
+    init {
+        Disposer.register(project, this)
+    }
 
-        val document = codeEditorDocumentFactory.createDocument("Empty File")
-        val editor = codeEditorFactory.createEditor(document, PlainTextFileType.INSTANCE, project)
+    private fun createEmptyEditor(): Editor {
+        val emptyDocument = codeEditorDocumentFactory.createDocument("Empty File")
+        val editor = codeEditorFactory.createEditor(emptyDocument, PlainTextFileType.INSTANCE, project)
 
         val editorContent = toolWindowContentFactory.createContent(editor.component)
         toolWindow.contentManager.addContent(editorContent)
+
+        return editor
+    }
+
+    override fun dispose() {
+        codeEditorFactory.destroyEditor(editor)
     }
 }

@@ -1,10 +1,12 @@
 package dev.paulshields.assistantview
 
 import com.intellij.ide.AppLifecycleListener
+import dev.paulshields.assistantview.factories.AssistantViewFactory
 import dev.paulshields.assistantview.factories.CodeEditorDocumentFactory
 import dev.paulshields.assistantview.factories.CodeEditorFactory
 import dev.paulshields.assistantview.factories.ToolWindowContentFactory
 import dev.paulshields.assistantview.factories.intellij.IntellijSingletons
+import dev.paulshields.assistantview.services.AssistantViewService
 import dev.paulshields.assistantview.services.FileAssistantService
 import dev.paulshields.assistantview.services.FileManagerService
 import dev.paulshields.lok.logInfo
@@ -15,11 +17,13 @@ class DependencyInjector : AppLifecycleListener {
     private val module = module {
         single { FileManagerService() }
         single { FileAssistantService(get()) }
+        single { AssistantViewService() }
 
         single { IntellijSingletons() }
         single { CodeEditorDocumentFactory(get()) }
         single { CodeEditorFactory(get(), get()) }
         single { ToolWindowContentFactory(get()) }
+        single { AssistantViewFactory(get(), get(), get()) }
     }
 
     override fun appFrameCreated(commandLineArgs: MutableList<String>) {

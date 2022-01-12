@@ -19,6 +19,6 @@
     </projectListeners>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Assistant View" anchor="right" factoryClass="dev.paulshields.assistantview.AssistantView" />
+        <toolWindow id="Assistant View" anchor="right" factoryClass="dev.paulshields.assistantview.AssistantViewProducer" />
     </extensions>
 </idea-plugin>
