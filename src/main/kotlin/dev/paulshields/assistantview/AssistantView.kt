@@ -9,6 +9,7 @@ import com.intellij.openapi.wm.ToolWindow
 import dev.paulshields.assistantview.factories.CodeEditorDocumentFactory
 import dev.paulshields.assistantview.factories.CodeEditorFactory
 import dev.paulshields.assistantview.factories.ToolWindowContentFactory
+import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
 
 class AssistantView(
     private val codeEditorDocumentFactory: CodeEditorDocumentFactory,
@@ -17,7 +18,7 @@ class AssistantView(
     private val toolWindow: ToolWindow,
     private val project: Project) : Disposable {
 
-    private val editor: Editor = createEmptyEditor()
+    private var editor: Editor? = createEmptyEditor().also { openNewEditor(it) }
 
     init {
         Disposer.register(project, this)
@@ -25,15 +26,28 @@ class AssistantView(
 
     private fun createEmptyEditor(): Editor {
         val emptyDocument = codeEditorDocumentFactory.createDocument("Empty File")
-        val editor = codeEditorFactory.createEditor(emptyDocument, PlainTextFileType.INSTANCE, project)
-
-        val editorContent = toolWindowContentFactory.createContent(editor.component)
-        toolWindow.contentManager.addContent(editorContent)
-
-        return editor
+        return codeEditorFactory.createEditor(emptyDocument, PlainTextFileType.INSTANCE, project)
     }
 
+    fun openFile(assistantViewFile: AssistantViewFile) {
+        codeEditorFactory.createEditor(assistantViewFile)?.let {
+            openNewEditor(it)
+        }
+    }
+
+    private fun openNewEditor(newEditor: Editor) {
+        toolWindow.contentManager.removeAllContents(true)
+
+        val editorContent = toolWindowContentFactory.createContent(newEditor.component)
+        toolWindow.contentManager.addContent(editorContent)
+
+        destroyOpenEditor()
+        editor = newEditor
+    }
+
+    private fun destroyOpenEditor() = editor?.let { codeEditorFactory.destroyEditor(it) }
+
     override fun dispose() {
-        codeEditorFactory.destroyEditor(editor)
+        destroyOpenEditor()
     }
 }
