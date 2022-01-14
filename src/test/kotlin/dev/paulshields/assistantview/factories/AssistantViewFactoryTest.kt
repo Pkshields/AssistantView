@@ -9,11 +9,10 @@ import dev.paulshields.assistantview.testcommon.mock
 import org.junit.jupiter.api.Test
 
 class AssistantViewFactoryTest {
-    private val codeEditorDocumentFactory = mock<CodeEditorDocumentFactory>()
-    private val toolWindowContentFactory = mock<ToolWindowContentFactory>()
+    private val toolWindowUIFactory = mock<ToolWindowUIFactory>()
     private val codeEditorFactory = mock<CodeEditorFactory>()
 
-    private val target = AssistantViewFactory(codeEditorDocumentFactory, toolWindowContentFactory, codeEditorFactory)
+    private val target = AssistantViewFactory(toolWindowUIFactory, codeEditorFactory)
 
     @Test
     fun `should create assistant view`() {

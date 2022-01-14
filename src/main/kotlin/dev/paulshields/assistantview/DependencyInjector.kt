@@ -4,7 +4,7 @@ import com.intellij.ide.AppLifecycleListener
 import dev.paulshields.assistantview.factories.AssistantViewFactory
 import dev.paulshields.assistantview.factories.CodeEditorDocumentFactory
 import dev.paulshields.assistantview.factories.CodeEditorFactory
-import dev.paulshields.assistantview.factories.ToolWindowContentFactory
+import dev.paulshields.assistantview.factories.ToolWindowUIFactory
 import dev.paulshields.assistantview.factories.intellij.IntellijSingletons
 import dev.paulshields.assistantview.services.AssistantViewService
 import dev.paulshields.assistantview.services.FileAssistantService
@@ -20,10 +20,10 @@ class DependencyInjector : AppLifecycleListener {
         single { AssistantViewService() }
 
         single { IntellijSingletons() }
-        single { CodeEditorDocumentFactory(get()) }
+        single { CodeEditorDocumentFactory() }
         single { CodeEditorFactory(get(), get()) }
-        single { ToolWindowContentFactory(get()) }
-        single { AssistantViewFactory(get(), get(), get()) }
+        single { ToolWindowUIFactory(get()) }
+        single { AssistantViewFactory(get(), get()) }
     }
 
     override fun appFrameCreated(commandLineArgs: MutableList<String>) {
