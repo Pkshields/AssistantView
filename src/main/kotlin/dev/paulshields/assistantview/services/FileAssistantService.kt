@@ -4,10 +4,16 @@ import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
 
 class FileAssistantService(private val fileManagerService: FileManagerService) {
     fun getCounterpartFile(file: AssistantViewFile): AssistantViewFile? {
-        val counterpartClass = file.mainClass?.let {
+        val extendsClass = file.mainClass?.let {
             it.superClass ?: it.interfaces.firstOrNull()
         }
 
-        return counterpartClass?.let { fileManagerService.getFileFromClass(it) }
+        return extendsClass?.let { fileManagerService.getFileFromClass(it) }
+            ?: findUnitTestForFile(file)
     }
+
+    private fun findUnitTestForFile(file: AssistantViewFile) =
+        fileManagerService
+            .findFilesMatchingRegex("${file.name}(Unit)?Test".toRegex(), file.project)
+            .firstOrNull()
 }

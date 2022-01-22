@@ -22,6 +22,6 @@ class FileOpenedListener : FileEditorManagerListener, KoinComponent {
 
         counterpartFile?.let { assistantViewService.openFile(it) }
 
-        logInfo { "File opened: ${openedFile?.name}; counterpart file: ${counterpartFile?.name}" }
+        logInfo { "File opened: ${openedFile?.fileName}; counterpart file: ${counterpartFile?.fileName}" }
     }
 }

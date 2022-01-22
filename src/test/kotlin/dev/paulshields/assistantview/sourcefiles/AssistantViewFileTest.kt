@@ -10,7 +10,8 @@ import io.mockk.every
 import org.junit.jupiter.api.Test
 
 abstract class AssistantViewFileTest {
-    protected val fileName = "ClassName"
+    private val name = "ClassName"
+    protected val fileName = "ClassName.kt"
     protected val project = mock<Project>()
     protected val mainClass = mock<PsiClass>().apply {
         every { name } returns "ClassName"
@@ -19,8 +20,13 @@ abstract class AssistantViewFileTest {
     abstract val target: AssistantViewFile
 
     @Test
+    fun `should get file name`() {
+        assertThat(target.fileName).isEqualTo(fileName)
+    }
+
+    @Test
     fun `should get name`() {
-        assertThat(target.name).isEqualTo(fileName)
+        assertThat(target.name).isEqualTo(name)
     }
 
     @Test
