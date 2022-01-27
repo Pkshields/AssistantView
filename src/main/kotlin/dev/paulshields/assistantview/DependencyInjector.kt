@@ -1,6 +1,7 @@
 package dev.paulshields.assistantview
 
 import com.intellij.ide.AppLifecycleListener
+import dev.paulshields.assistantview.common.Dispatcher
 import dev.paulshields.assistantview.factories.AssistantViewFactory
 import dev.paulshields.assistantview.factories.CodeEditorDocumentFactory
 import dev.paulshields.assistantview.factories.CodeEditorFactory
@@ -16,6 +17,8 @@ import org.koin.dsl.module
 
 class DependencyInjector : AppLifecycleListener {
     private val module = module {
+        single { Dispatcher() }
+
         single { IntellijFileSystemService() }
         single { FileManagerService(get()) }
         single { FileAssistantService(get()) }

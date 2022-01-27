@@ -3,6 +3,9 @@ package dev.paulshields.assistantview
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import dev.paulshields.assistantview.common.Dispatcher
+import dev.paulshields.assistantview.extensions.runOnUiThread
+import dev.paulshields.assistantview.extensions.runWithReadPermission
 import dev.paulshields.assistantview.services.AssistantViewService
 import dev.paulshields.assistantview.services.FileAssistantService
 import dev.paulshields.assistantview.services.FileManagerService
@@ -10,7 +13,9 @@ import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
 import dev.paulshields.assistantview.testcommon.mock
 import dev.paulshields.assistantview.testcommon.mockKoinApplication
 import io.mockk.every
+import io.mockk.mockkStatic
 import io.mockk.verify
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import org.koin.dsl.module
@@ -25,13 +30,16 @@ class FileOpenedListenerTest : KoinTest {
         every { manager.project } returns project
     }
 
+    private val assistantViewService = mock<AssistantViewService>()
     private val fileAssistantService = mock<FileAssistantService>().apply {
         every { getCounterpartFile(assistantViewFile) } returns assistantViewFile
     }
     private val fileManagerService = mock<FileManagerService>().apply {
         every { getFileFromVirtualFile(virtualFile, project) } returns assistantViewFile
     }
-    private val assistantViewService = mock<AssistantViewService>()
+    private val dispatcher = mock<Dispatcher>().apply {
+        every { runOnBackgroundThread(any()) } answers { firstArg<() -> Unit>().invoke() }
+    }
 
     @JvmField
     @RegisterExtension
@@ -40,10 +48,16 @@ class FileOpenedListenerTest : KoinTest {
             single { fileAssistantService }
             single { fileManagerService }
             single { assistantViewService }
+            single { dispatcher }
         }
     )
 
     private val target = FileOpenedListener()
+
+    @BeforeEach
+    fun beforeEach() {
+        mockIntellijThreadControlFunctions()
+    }
 
     @Test
     fun `should get assistant view file for newly opened file`() {
@@ -53,12 +67,28 @@ class FileOpenedListenerTest : KoinTest {
     }
 
     @Test
+    fun `should get assistant view file on a background thread`() {
+        target.selectionChanged(fileEditorManagerEvent)
+
+        verify(exactly = 1) { dispatcher.runOnBackgroundThread(any()) }
+    }
+
+    @Test
     fun `should handle if no newly opened file is provided`() {
         every { fileEditorManagerEvent.newFile } returns null
 
         target.selectionChanged(fileEditorManagerEvent)
 
         verify(exactly = 0) { fileManagerService.getFileFromVirtualFile(any(), any()) }
+    }
+
+    @Test
+    fun `should not invoke the dispatch thread if no newly opened file is provided`() {
+        every { fileEditorManagerEvent.newFile } returns null
+
+        target.selectionChanged(fileEditorManagerEvent)
+
+        verify(exactly = 0) { dispatcher.runOnBackgroundThread(any()) }
     }
 
     @Test
@@ -91,5 +121,11 @@ class FileOpenedListenerTest : KoinTest {
         target.selectionChanged(fileEditorManagerEvent)
 
         verify(exactly = 0) { assistantViewService.openFile(any()) }
+    }
+
+    private fun mockIntellijThreadControlFunctions() {
+        mockkStatic("dev.paulshields.assistantview.extensions.IntellijThreadControlExtensionsKt")
+        every { runWithReadPermission(any<() -> AssistantViewFile?>()) } answers { firstArg<() -> AssistantViewFile?>().invoke() }
+        every { runOnUiThread(any()) } answers { firstArg<() -> Unit>().invoke() }
     }
 }

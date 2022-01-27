@@ -50,6 +50,7 @@ dependencies {
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
     testImplementation("io.insert-koin:koin-test:3.1.5")
     testImplementation("io.insert-koin:koin-test-junit5:3.1.5")
+    testImplementation("org.awaitility:awaitility-kotlin:4.1.1")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
