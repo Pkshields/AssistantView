@@ -10,9 +10,11 @@ import assertk.assertions.isNull
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiManager
 import dev.paulshields.assistantview.services.intellij.IntellijFileSystemService
 import dev.paulshields.assistantview.sourcefiles.AssistantViewClass
+import dev.paulshields.assistantview.sourcefiles.files.JavaAssistantViewFile
 import dev.paulshields.assistantview.sourcefiles.files.KotlinAssistantViewFile
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test
 class FileManagerServiceTest {
     private val virtualFile = mock<VirtualFile>()
     private val kotlinFile = mock<KtFile>()
+    private val javaFile = mock<PsiJavaFile>()
     private val psiManager = mock<PsiManager>().apply {
         every { findFile(virtualFile) } returns kotlinFile
     }
@@ -52,6 +55,16 @@ class FileManagerServiceTest {
     }
 
     @Test
+    fun `should get assistant view file from java virtualfile`() {
+        every { psiManager.findFile(virtualFile) } returns javaFile
+
+        val result = target.getFileFromVirtualFile(virtualFile, project)
+
+        assertThat(result).isNotNull().isInstanceOf(JavaAssistantViewFile::class)
+        assertThat(result?.psiFile).isEqualTo(javaFile)
+    }
+
+    @Test
     fun `should return null if code in virtualfile is unsupported`() {
         every { psiManager.findFile(virtualFile) } returns unsupportedFile
 
@@ -70,11 +83,21 @@ class FileManagerServiceTest {
     }
 
     @Test
-    fun `should get assistant view file from class`() {
+    fun `should get assistant view file from kotlin class`() {
         val result = target.getFileFromClass(assistantViewClass)
 
         assertThat(result).isNotNull().isInstanceOf(KotlinAssistantViewFile::class)
         assertThat(result?.psiFile).isEqualTo(kotlinFile)
+    }
+
+    @Test
+    fun `should get assistant view file from java class`() {
+        every { psiManager.findFile(virtualFile) } returns javaFile
+
+        val result = target.getFileFromClass(assistantViewClass)
+
+        assertThat(result).isNotNull().isInstanceOf(JavaAssistantViewFile::class)
+        assertThat(result?.psiFile).isEqualTo(javaFile)
     }
 
     @Test
