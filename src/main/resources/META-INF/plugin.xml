@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>dev.paulshields.AssistantView</id>
+    <id>dev.paulshields.assistantview</id>
     <name>Assistant View</name>
     <vendor url="http://paulshields.dev">Paul Shields</vendor>
 
@@ -19,6 +19,6 @@
     </projectListeners>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Assistant View" anchor="right" factoryClass="dev.paulshields.assistantview.AssistantViewProducer" />
+        <toolWindow id="Assistant View" anchor="right" factoryClass="dev.paulshields.assistantview.AssistantViewProducer" icon="AssistantViewIcons.toolWindowIcon" />
     </extensions>
 </idea-plugin>

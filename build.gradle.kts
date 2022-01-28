@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
-group = "dev.paulshields"
+group = "dev.paulshields.assistantview"
 version = "1.0-SNAPSHOT"
 
 plugins {
