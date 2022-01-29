@@ -13,8 +13,8 @@ plugins {
 }
 
 intellij {
-    version.set("2021.3.1")
-    plugins.set(listOf("org.jetbrains.kotlin"))
+    version.set("2021.1.3")
+    plugins.set(listOf("com.intellij.java", "org.jetbrains.kotlin"))
 }
 
 repositories {

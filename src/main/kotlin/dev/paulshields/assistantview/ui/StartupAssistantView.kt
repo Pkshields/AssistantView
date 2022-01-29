@@ -1,17 +1,15 @@
 package dev.paulshields.assistantview.ui
 
-import com.intellij.ui.dsl.builder.panel
-import com.intellij.ui.dsl.gridLayout.HorizontalAlign
-import com.intellij.ui.dsl.gridLayout.VerticalAlign
 import com.intellij.util.ui.JBUI
+import java.awt.GridBagLayout
+import javax.swing.JLabel
+import javax.swing.JPanel
 
 object StartupAssistantView {
-    val panel = panel {
-        row {
-            text("Assistant View is ready!")
-                .horizontalAlign(HorizontalAlign.CENTER)
-                .verticalAlign(VerticalAlign.CENTER)
-                .applyToComponent { foreground = JBUI.CurrentTheme.ContextHelp.FOREGROUND }
-        }.resizableRow()
+    val panel = JPanel().apply {
+        add(JLabel("Assistant View is ready!").apply {
+            foreground = JBUI.CurrentTheme.ContextHelp.FOREGROUND
+        })
+        layout = GridBagLayout()
     }
 }
