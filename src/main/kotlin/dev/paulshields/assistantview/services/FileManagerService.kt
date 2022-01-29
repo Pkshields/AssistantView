@@ -31,6 +31,18 @@ class FileManagerService(private val intellijFileSystemService: IntellijFileSyst
         return getFileFromVirtualFile(virtualFile, clazz.project)
     }
 
+    fun findFileWithName(name: String, project: Project): AssistantViewFile? {
+        val stringToMatch = "$name."
+
+        return intellijFileSystemService
+            .getAllFilenames(project)
+            .firstOrNull { it.startsWith(stringToMatch) }
+            ?.let {
+                intellijFileSystemService.findVirtualFileByFilename(it, project)
+                    ?.let { getFileFromVirtualFile(it, project) }
+            }
+    }
+
     fun findFilesMatchingRegex(regex: Regex, project: Project) =
         intellijFileSystemService
             .getAllFilenames(project)

@@ -32,7 +32,8 @@ class FileManagerServiceTest {
         every { getService(PsiManager::class.java) } returns psiManager
     }
 
-    private val fileName = "KotlinFile.kt"
+    private val name = "KotlinFile"
+    private val fileName = "$name.kt"
     private val intellijFileSystemService = mock<IntellijFileSystemService>().apply {
         every { getAllFilenames(project) } returns listOf(fileName)
         every { findVirtualFileByFilename(fileName, project) } returns virtualFile
@@ -114,6 +115,48 @@ class FileManagerServiceTest {
         every { psiManager.findFile(virtualFile) } returns null
 
         val result = target.getFileFromClass(assistantViewClass)
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `should get assistant view file for name of file`() {
+        val result = target.findFileWithName(name, project)
+
+        assertThat(result).isNotNull().isInstanceOf(KotlinAssistantViewFile::class)
+        assertThat(result?.psiFile).isEqualTo(kotlinFile)
+    }
+
+    @Test
+    fun `should return empty list if no file with name exist`() {
+        val result = target.findFileWithName("InvalidFileName", project)
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `should return null if no virtualfile available for file with name`() {
+        every { intellijFileSystemService.findVirtualFileByFilename(fileName, project) } returns null
+
+        val result = target.findFileWithName(name, project)
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `should return null if code in virtualfiles for file with name is unsupported`() {
+        every { psiManager.findFile(virtualFile) } returns unsupportedFile
+
+        val result = target.findFileWithName(name, project)
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `should return null if there is no underlying code file for file with name`() {
+        every { psiManager.findFile(virtualFile) } returns null
+
+        val result = target.findFileWithName(name, project)
 
         assertThat(result).isNull()
     }

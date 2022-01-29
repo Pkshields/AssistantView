@@ -8,13 +8,16 @@ import dev.paulshields.assistantview.sourcefiles.AssistantViewClass
 import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 class FileAssistantServiceTest {
+    private val project = mock<Project>()
     private val fileManagerService = mock<FileManagerService>()
     private val file = mock<AssistantViewFile>().apply {
         every { mainClass?.superClass } returns null
         every { mainClass?.interfaces } returns emptyList()
+        every { project } returns this@FileAssistantServiceTest.project
     }
     private val counterpartFile = mock<AssistantViewFile>()
 
@@ -44,13 +47,45 @@ class FileAssistantServiceTest {
 
     @Test
     fun `should return test suite as counterpart class if no base class or interface available`() {
-        val project = mock<Project>()
-        every { file.project } returns project
         every { fileManagerService.findFilesMatchingRegex(match { it.pattern.endsWith("Test") }, project) } returns listOf(counterpartFile)
 
         val result = target.getCounterpartFile(file)
 
         assertThat(result).isEqualTo(counterpartFile)
+    }
+
+    @Test
+    fun `should return target class as counterpart class if a test suite has been opened`() {
+        every { file.name } returns "MarioTest"
+        every { fileManagerService.findFileWithName(eq("Mario"), project) } returns counterpartFile
+
+        val result = target.getCounterpartFile(file)
+
+        assertThat(result).isEqualTo(counterpartFile)
+    }
+
+    @Test
+    fun `should return target class as counterpart class if a unit test suite has been opened`() {
+        every { file.name } returns "MarioUnitTest"
+        every { fileManagerService.findFileWithName(eq("Mario"), project) } returns counterpartFile
+
+        val result = target.getCounterpartFile(file)
+
+        assertThat(result).isEqualTo(counterpartFile)
+    }
+
+    @Test
+    fun `should fall back to standard counterpart class logic if can not find target class for test suite `() {
+        every { file.name } returns "MarioUnitTest"
+        every { fileManagerService.findFileWithName(any(), project) } returns null
+
+        target.getCounterpartFile(file)
+
+        verify {
+            fileManagerService.findFileWithName(any(), project)
+            file.mainClass?.superClass
+            file.mainClass?.interfaces
+        }
     }
 
     @Test

@@ -1,15 +1,29 @@
 package dev.paulshields.assistantview.services
 
+import dev.paulshields.assistantview.extensions.extractGroups
 import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
 
 class FileAssistantService(private val fileManagerService: FileManagerService) {
-    fun getCounterpartFile(file: AssistantViewFile): AssistantViewFile? {
+    private val fileNameTestSuiteRegex = "(\\w+?)(Unit)?Test".toRegex()
+
+    fun getCounterpartFile(file: AssistantViewFile) =
+        findTargetFileIfTestSuite(file)
+            ?: findFileFromExtendsClasses(file)
+            ?: findUnitTestForFile(file)
+
+    private fun findTargetFileIfTestSuite(file: AssistantViewFile): AssistantViewFile? {
+        val name = fileNameTestSuiteRegex
+            .extractGroups(file.name)
+            .getOrNull(0)
+        return name?.let { fileManagerService.findFileWithName(it, file.project) }
+    }
+
+    private fun findFileFromExtendsClasses(file: AssistantViewFile): AssistantViewFile? {
         val extendsClass = file.mainClass?.let {
             it.superClass ?: it.interfaces.firstOrNull()
         }
 
         return extendsClass?.let { fileManagerService.getFileFromClass(it) }
-            ?: findUnitTestForFile(file)
     }
 
     private fun findUnitTestForFile(file: AssistantViewFile) =
