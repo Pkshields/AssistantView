@@ -5,7 +5,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Project
+        uses: actions/checkout@v2
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -20,3 +21,15 @@ jobs:
 
       - name: Run Tests
         run: ./gradlew test
+
+      - name: Grab IntelliJ Platform Versions To Verify Against
+        run: ./gradlew listProductsReleases
+
+      - name: Setup Plugin Verifier IDEs Cache
+        uses: actions/cache@v2.1.7
+        with:
+          path: ~/.pluginVerifier/ides
+          key: plugin-verifier-${{ hashFiles('build/listProductsReleases.txt') }}
+
+      - name: Run Plugin Verification
+        run: ./gradlew runPluginVerifier
