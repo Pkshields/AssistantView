@@ -5,11 +5,11 @@ group = "dev.paulshields.assistantview"
 version = "1.0-SNAPSHOT"
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    id("org.jetbrains.intellij") version "1.3.0"
+    kotlin("jvm") version "1.6.21"
+    id("org.jetbrains.intellij") version "1.5.3"
 
-    id("io.gitlab.arturbosch.detekt").version("1.18.1")
-    id("org.jlleitschuh.gradle.ktlint").version("10.2.0")
+    id("io.gitlab.arturbosch.detekt").version("1.20.0")
+    id("org.jlleitschuh.gradle.ktlint").version("10.3.0")
 }
 
 intellij {
@@ -42,14 +42,14 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     implementation("dev.paulshields:lok:1.0")
-    implementation("io.insert-koin:koin-core:3.1.5")
+    implementation("io.insert-koin:koin-core:3.2.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
-    testImplementation("io.mockk:mockk:1.12.2")
+    testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-    testImplementation("io.insert-koin:koin-test:3.1.5")
-    testImplementation("io.insert-koin:koin-test-junit5:3.1.5")
+    testImplementation("io.insert-koin:koin-test:3.2.0")
+    testImplementation("io.insert-koin:koin-test-junit5:3.2.0")
     testImplementation("org.awaitility:awaitility-kotlin:4.1.1")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
