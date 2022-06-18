@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="dev.paulshields.assistantview">
+        <sourceFileParser implementation="dev.paulshields.assistantview.lang.JavaSourceFileParser"/>
+    </extensions>
+</idea-plugin>
