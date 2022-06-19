@@ -4,17 +4,23 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 group = "dev.paulshields.assistantview"
 version = "1.0-SNAPSHOT"
 
+val intellijType: String by project
+val intellijVersion: String by project
+val intellijPlugins: String by project
+
 plugins {
     kotlin("jvm") version "1.6.21"
     id("org.jetbrains.intellij") version "1.5.2"
 
-    id("io.gitlab.arturbosch.detekt").version("1.20.0")
-    id("org.jlleitschuh.gradle.ktlint").version("10.3.0")
+    id("net.saliman.properties") version "1.5.2"
+    id("io.gitlab.arturbosch.detekt") version "1.20.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 intellij {
-    version.set("2021.2.1")
-    plugins.set(listOf("com.intellij.java", "org.jetbrains.kotlin"))
+    type.set(intellijType)
+    version.set(intellijVersion)
+    plugins.set(intellijPlugins.split(","))
 }
 
 repositories {
