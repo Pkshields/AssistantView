@@ -6,6 +6,7 @@ import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import dev.paulshields.assistantview.common.Dispatcher
+import dev.paulshields.assistantview.extensions.isDumb
 import dev.paulshields.assistantview.extensions.runOnUiThread
 import dev.paulshields.assistantview.extensions.runWithReadPermission
 import dev.paulshields.assistantview.services.AssistantViewService
@@ -17,7 +18,6 @@ import dev.paulshields.assistantview.testcommon.mockKoinApplication
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.verify
-import org.jetbrains.kotlin.idea.caches.resolve.util.isInDumbMode
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -31,8 +31,8 @@ class FileOpenedListenerTest : KoinTest {
         every { runWhenSmart(any()) } answers { firstArg<Runnable>().run() }
     }
     private val project = mock<Project>().apply {
-        mockkStatic(Project::isInDumbMode)
-        every { isInDumbMode() } returns false
+        mockkStatic(Project::isDumb)
+        every { isDumb } returns false
         every { getService(DumbService::class.java) } returns dumbService
     }
     private val fileEditorManager = mock<FileEditorManager>().apply {
@@ -146,7 +146,7 @@ class FileOpenedListenerTest : KoinTest {
 
     @Test
     fun `should wait for dumb mode to finish before opening counterpart file`() {
-        every { project.isInDumbMode() } returns true
+        every { project.isDumb } returns true
 
         target.selectionChanged(fileEditorManagerEvent)
 
@@ -158,7 +158,7 @@ class FileOpenedListenerTest : KoinTest {
 
     @Test
     fun `should not try to open find or open counterpart file until dumb mode is finished`() {
-        every { project.isInDumbMode() } returns true
+        every { project.isDumb } returns true
         every { dumbService.runWhenSmart(any()) } answers { }
 
         target.selectionChanged(fileEditorManagerEvent)
@@ -168,7 +168,7 @@ class FileOpenedListenerTest : KoinTest {
 
     @Test
     fun `should not try to open find or open counterpart file when dumb mode is finished if no editor is currently open`() {
-        every { project.isInDumbMode() } returns true
+        every { project.isDumb } returns true
         every { fileEditorManager.selectedEditor } returns null
 
         target.selectionChanged(fileEditorManagerEvent)
