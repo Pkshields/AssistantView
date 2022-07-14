@@ -10,10 +10,10 @@ import dev.paulshields.assistantview.common.Dispatcher
 import dev.paulshields.assistantview.extensions.isDumb
 import dev.paulshields.assistantview.extensions.runOnUiThread
 import dev.paulshields.assistantview.extensions.runWithReadPermission
+import dev.paulshields.assistantview.lang.source.AssistantViewFile
 import dev.paulshields.assistantview.services.AssistantViewService
 import dev.paulshields.assistantview.services.FileAssistantService
 import dev.paulshields.assistantview.services.FileManagerService
-import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
 import dev.paulshields.lok.logInfo
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

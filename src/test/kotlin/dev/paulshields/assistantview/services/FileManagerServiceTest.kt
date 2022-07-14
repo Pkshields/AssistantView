@@ -10,11 +10,11 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
-import dev.paulshields.assistantview.lang.SourceFileParser
+import dev.paulshields.assistantview.lang.parser.SourceFileParser
+import dev.paulshields.assistantview.lang.source.AssistantViewClass
+import dev.paulshields.assistantview.lang.source.AssistantViewFile
 import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 import dev.paulshields.assistantview.services.intellij.IntellijFileSystemService
-import dev.paulshields.assistantview.sourcefiles.AssistantViewClass
-import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
 import org.junit.jupiter.api.Test
@@ -41,7 +41,7 @@ class FileManagerServiceTest {
         every { extensionList } returns listOf(supportedFileParser)
     }
     private val assistantViewClass = mock<AssistantViewClass>().apply {
-        every { psiClass.containingFile.virtualFile } returns virtualFile
+        every { containingFile } returns virtualFile
         every { project } returns this@FileManagerServiceTest.project
     }
 

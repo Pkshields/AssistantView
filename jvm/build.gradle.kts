@@ -9,3 +9,9 @@ intellij {
     version.set(intellijVersion)
     plugins.set(listOf("com.intellij.java", "org.jetbrains.kotlin"))
 }
+
+dependencies {
+    implementation(project(":common"))
+
+    testImplementation(testFixtures(project(":")))
+}

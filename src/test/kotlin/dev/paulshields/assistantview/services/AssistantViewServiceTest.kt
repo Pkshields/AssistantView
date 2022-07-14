@@ -2,7 +2,7 @@ package dev.paulshields.assistantview.services
 
 import com.intellij.openapi.project.Project
 import dev.paulshields.assistantview.AssistantView
-import dev.paulshields.assistantview.sourcefiles.AssistantViewFile
+import dev.paulshields.assistantview.lang.source.AssistantViewFile
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
 import io.mockk.verify

@@ -16,11 +16,14 @@ jobs:
           java-package: jdk
           cache: 'gradle'
 
-      - name: Build Project
+      - name: Build Project for IntelliJ
         run: ./gradlew clean build
 
       - name: Run Tests
         run: ./gradlew test
+
+      - name: Build Project for CLion
+        run: ./gradlew clean build -Pide=clion
 
       - name: Grab IntelliJ Platform Versions To Verify Against
         run: ./gradlew listProductsReleases
