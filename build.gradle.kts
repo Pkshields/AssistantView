@@ -29,6 +29,9 @@ intellij {
     plugins.set(intellijPlugins.split(","))
 }
 
+// Block all subprojects from running the plugin verifier
+gradle.startParameter.excludedTaskNames.addAll(childProjects.keys.map { ":$it:runPluginVerifier" })
+
 tasks.test {
     useJUnitPlatform()
 }
