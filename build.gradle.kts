@@ -29,12 +29,8 @@ intellij {
     plugins.set(intellijPlugins.split(","))
 }
 
-// Block all subprojects from running the plugin verifier
-gradle.startParameter.excludedTaskNames.addAll(childProjects.keys.map { ":$it:runPluginVerifier" })
-
-tasks.test {
-    useJUnitPlatform()
-}
+// Disabled until AssistantView has a need for custom settings to speed up the build process
+tasks.buildSearchableOptions { enabled = false }
 
 dependencies {
     implementation(project(":common"))

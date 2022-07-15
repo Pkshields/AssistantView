@@ -12,6 +12,12 @@ intellij {
     plugins.set(intellijPlugins.split(","))
 }
 
+tasks {
+    buildSearchableOptions { enabled = false }
+    runPluginVerifier { enabled = false }
+    verifyPlugin { enabled = false }
+}
+
 dependencies {
     testImplementation(testFixtures(project(":")))
 }

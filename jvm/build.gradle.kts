@@ -10,6 +10,12 @@ intellij {
     plugins.set(listOf("com.intellij.java", "org.jetbrains.kotlin"))
 }
 
+tasks {
+    buildSearchableOptions { enabled = false }
+    runPluginVerifier { enabled = false }
+    verifyPlugin { enabled = false }
+}
+
 dependencies {
     implementation(project(":common"))
 
