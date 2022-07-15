@@ -2,7 +2,7 @@ package dev.paulshields.assistantview.services
 
 import com.intellij.openapi.project.Project
 import dev.paulshields.assistantview.AssistantView
-import dev.paulshields.assistantview.lang.source.AssistantViewFile
+import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.lok.logError
 import dev.paulshields.lok.logWarn
 

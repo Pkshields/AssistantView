@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.fileTypes.PlainTextFileType
 import com.intellij.openapi.project.Project
 import dev.paulshields.assistantview.factories.intellij.IntellijSingletons
-import dev.paulshields.assistantview.lang.source.AssistantViewFile
+import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
 import io.mockk.verify

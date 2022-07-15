@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
 import dev.paulshields.assistantview.factories.intellij.IntellijSingletons
-import dev.paulshields.assistantview.lang.source.AssistantViewFile
+import dev.paulshields.assistantview.lang.AssistantViewFile
 
 class CodeEditorFactory(private val codeEditorDocumentFactory: CodeEditorDocumentFactory, intellijSingletons: IntellijSingletons) {
     private val editorFactory = intellijSingletons.editorFactory

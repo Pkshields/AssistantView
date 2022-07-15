@@ -1,4 +1,4 @@
-package dev.paulshields.assistantview.lang.parser
+package dev.paulshields.assistantview.lang
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -6,23 +6,24 @@ import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiJavaFile
+import dev.paulshields.assistantview.lang.JavaSourceFileInterpreter
 import dev.paulshields.assistantview.testcommon.mock
-import org.jetbrains.kotlin.psi.KtFile
 import org.junit.jupiter.api.Test
 
-class KotlinSourceFileParserTest {
+class JavaSourceFileInterpreterTest {
     private val project = mock<Project>()
 
-    private val target = KotlinSourceFileParser()
+    private val target = JavaSourceFileInterpreter()
 
     @Test
-    fun `should parse kotlin file`() {
-        val kotlinFile = mock<KtFile>()
+    fun `should parse java file`() {
+        val javaFile = mock<PsiJavaFile>()
 
-        val result = target.parseFile(kotlinFile, project)
+        val result = target.parseFile(javaFile, project)
 
         assertThat(result).isNotNull()
-        assertThat(result?.psiFile).isEqualTo(kotlinFile)
+        assertThat(result?.psiFile).isEqualTo(javaFile)
         assertThat(result?.project).isEqualTo(project)
     }
 

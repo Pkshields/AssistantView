@@ -3,8 +3,8 @@ package dev.paulshields.assistantview.services
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
-import dev.paulshields.assistantview.lang.source.AssistantViewClass
-import dev.paulshields.assistantview.lang.source.AssistantViewFile
+import dev.paulshields.assistantview.lang.AssistantViewClass
+import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 import dev.paulshields.assistantview.services.intellij.IntellijFileSystemService
 import dev.paulshields.lok.logWarn
@@ -13,13 +13,13 @@ class FileManagerService(
     private val intellijFileSystemService: IntellijFileSystemService,
     intellijExtensionPoints: IntellijExtensionPoints) {
 
-    private val sourceFileParsers = intellijExtensionPoints.sourceFileParsers.extensionList
+    private val sourceFileInterpreters = intellijExtensionPoints.sourceFileInterpreters.extensionList
 
     fun getFileFromVirtualFile(virtualFile: VirtualFile, project: Project): AssistantViewFile? {
         val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
 
         return psiFile?.let {
-            sourceFileParsers.firstNotNullOfOrNull { it.parseFile(psiFile, project) }
+            sourceFileInterpreters.firstNotNullOfOrNull { it.parseFile(psiFile, project) }
         } ?: run {
             logWarn { "File type for file ${psiFile?.name} is not supported by Assistant View." }
             null

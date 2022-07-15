@@ -1,7 +1,7 @@
 package dev.paulshields.assistantview.services
 
 import dev.paulshields.assistantview.extensions.extractGroups
-import dev.paulshields.assistantview.lang.source.AssistantViewFile
+import dev.paulshields.assistantview.lang.AssistantViewFile
 
 class FileAssistantService(private val fileManagerService: FileManagerService) {
     private val fileNameTestSuiteRegex = "(\\w+?)(Unit)?Test".toRegex()

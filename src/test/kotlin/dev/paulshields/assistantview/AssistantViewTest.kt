@@ -6,7 +6,7 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.ui.content.Content
 import dev.paulshields.assistantview.factories.CodeEditorFactory
 import dev.paulshields.assistantview.factories.ToolWindowUIFactory
-import dev.paulshields.assistantview.lang.source.AssistantViewFile
+import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
 import io.mockk.verify

@@ -4,8 +4,8 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import com.intellij.openapi.project.Project
-import dev.paulshields.assistantview.lang.source.AssistantViewClass
-import dev.paulshields.assistantview.lang.source.AssistantViewFile
+import dev.paulshields.assistantview.lang.AssistantViewClass
+import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
 import io.mockk.verify

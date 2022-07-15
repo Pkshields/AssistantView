@@ -2,7 +2,7 @@ package dev.paulshields.assistantview.factories
 
 import com.intellij.openapi.editor.Document
 import com.intellij.psi.PsiDocumentManager
-import dev.paulshields.assistantview.lang.source.AssistantViewFile
+import dev.paulshields.assistantview.lang.AssistantViewFile
 
 class CodeEditorDocumentFactory {
     fun getEditorDocument(file: AssistantViewFile): Document? {

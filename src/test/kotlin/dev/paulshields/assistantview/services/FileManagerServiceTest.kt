@@ -10,9 +10,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
-import dev.paulshields.assistantview.lang.parser.SourceFileParser
-import dev.paulshields.assistantview.lang.source.AssistantViewClass
-import dev.paulshields.assistantview.lang.source.AssistantViewFile
+import dev.paulshields.assistantview.lang.AssistantViewClass
+import dev.paulshields.assistantview.lang.AssistantViewFile
+import dev.paulshields.assistantview.lang.SourceFileInterpreter
 import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 import dev.paulshields.assistantview.services.intellij.IntellijFileSystemService
 import dev.paulshields.assistantview.testcommon.mock
@@ -33,12 +33,12 @@ class FileManagerServiceTest {
     private val project = mock<Project>().apply {
         every { getService(PsiManager::class.java) } returns psiManager
     }
-    private val supportedFileParser = mock<SourceFileParser>().apply {
+    private val supportedFileInterpreter = mock<SourceFileInterpreter>().apply {
         every { parseFile(supportedFile, project) } returns assistantViewFile
         every { parseFile(unsupportedFile, any()) } returns null
     }
-    private val parsers = mock<ExtensionPointName<SourceFileParser>>().apply {
-        every { extensionList } returns listOf(supportedFileParser)
+    private val interpreters = mock<ExtensionPointName<SourceFileInterpreter>>().apply {
+        every { extensionList } returns listOf(supportedFileInterpreter)
     }
     private val assistantViewClass = mock<AssistantViewClass>().apply {
         every { containingFile } returns virtualFile
@@ -50,7 +50,7 @@ class FileManagerServiceTest {
         every { findVirtualFileByFilename(fileName, project) } returns virtualFile
     }
     private val intellijExtensionPoints = mock<IntellijExtensionPoints>().apply {
-        every { sourceFileParsers } returns parsers
+        every { sourceFileInterpreters } returns interpreters
     }
 
     private val target = FileManagerService(intellijFileSystemService, intellijExtensionPoints)

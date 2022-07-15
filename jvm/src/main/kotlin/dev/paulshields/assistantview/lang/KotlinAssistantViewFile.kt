@@ -1,4 +1,4 @@
-package dev.paulshields.assistantview.lang.source
+package dev.paulshields.assistantview.lang
 
 import com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.psi.KtFile

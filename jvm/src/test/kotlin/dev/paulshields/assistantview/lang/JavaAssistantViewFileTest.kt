@@ -1,4 +1,4 @@
-package dev.paulshields.assistantview.lang.source
+package dev.paulshields.assistantview.lang
 
 import assertk.assertThat
 import assertk.assertions.hasSize
