@@ -16,6 +16,7 @@ tasks {
     buildSearchableOptions { enabled = false }
     runPluginVerifier { enabled = false }
     verifyPlugin { enabled = false }
+    listProductsReleases { enabled = false }
 }
 
 dependencies {
