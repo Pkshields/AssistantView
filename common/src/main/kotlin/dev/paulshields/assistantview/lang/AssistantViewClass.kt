@@ -7,6 +7,6 @@ interface AssistantViewClass {
     val project: Project
     val superClasses: List<AssistantViewClass>
     val interfaces: List<AssistantViewClass>
-    val containingFile: VirtualFile
+    val containingFile: VirtualFile?
     val name: String
 }

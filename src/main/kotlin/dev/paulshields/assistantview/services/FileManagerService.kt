@@ -26,10 +26,13 @@ class FileManagerService(
         }
     }
 
-    fun getFileFromClass(clazz: AssistantViewClass): AssistantViewFile? {
-        val virtualFile = clazz.containingFile
-        return getFileFromVirtualFile(virtualFile, clazz.project)
-    }
+    fun getFileFromClass(clazz: AssistantViewClass) =
+        clazz.containingFile?.let {
+            getFileFromVirtualFile(it, clazz.project)
+        } ?: run {
+            logWarn { "Could not find the file containing the class ${clazz.name} in the project." }
+            null
+        }
 
     fun findFileWithName(name: String, project: Project): AssistantViewFile? {
         val stringToMatch = "$name."

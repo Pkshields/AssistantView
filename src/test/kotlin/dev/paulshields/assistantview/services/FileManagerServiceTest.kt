@@ -98,6 +98,15 @@ class FileManagerServiceTest {
 
     @Test
     fun `should return null if the class has no file in current project`() {
+        every { assistantViewClass.containingFile } returns null
+
+        val result = target.getFileFromClass(assistantViewClass)
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `should return null if the class has no file containing code in current project`() {
         every { psiManager.findFile(virtualFile) } returns null
 
         val result = target.getFileFromClass(assistantViewClass)

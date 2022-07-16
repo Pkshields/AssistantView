@@ -5,6 +5,7 @@ import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiClass
 import dev.paulshields.assistantview.extensions.extendsClasses
 import dev.paulshields.assistantview.testcommon.mock
@@ -17,7 +18,8 @@ class JvmAssistantViewClassTest {
     private val superClassName = "SuperClass"
     private val superClass = psiClassWithName(superClassName)
     private val interfaces = arrayOf(psiClassWithName(""), psiClassWithName(""), psiClassWithName(""))
-    private val psiClass = psiClassWithName(className)
+    private val containingFile = mock<VirtualFile>()
+    private val psiClass = psiClassWithName(className, containingFile)
     private val project = mock<Project>()
 
     private val target = JvmAssistantViewClass(psiClass, project)
@@ -54,6 +56,11 @@ class JvmAssistantViewClassTest {
     }
 
     @Test
+    fun `should get containing file`() {
+        assertThat(target.containingFile).isEqualTo(containingFile)
+    }
+
+    @Test
     fun `should get class name`() {
         assertThat(target.name).isEqualTo(className)
     }
@@ -63,8 +70,15 @@ class JvmAssistantViewClassTest {
         assertThat(target.toString()).isEqualTo(className)
     }
 
-    private fun psiClassWithName(psiClassName: String) =
-        mock<PsiClass>().apply {
+    private fun psiClassWithName(psiClassName: String, file: VirtualFile? = null): PsiClass {
+        val mock = mock<PsiClass>().apply {
             every { name } returns psiClassName
         }
+
+        file?.let {
+            every { mock.containingFile.virtualFile } returns file
+        }
+
+        return mock
+    }
 }
