@@ -5,7 +5,7 @@ import com.intellij.openapi.vfs.VirtualFile
 
 interface AssistantViewClass {
     val project: Project
-    val superClass: AssistantViewClass?
+    val superClasses: List<AssistantViewClass>
     val interfaces: List<AssistantViewClass>
     val containingFile: VirtualFile
     val name: String

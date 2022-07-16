@@ -6,7 +6,6 @@ import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import dev.paulshields.assistantview.lang.KotlinSourceFileInterpreter
 import dev.paulshields.assistantview.testcommon.mock
 import org.jetbrains.kotlin.psi.KtFile
 import org.junit.jupiter.api.Test

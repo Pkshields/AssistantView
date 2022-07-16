@@ -7,7 +7,6 @@ import assertk.assertions.isNull
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
-import dev.paulshields.assistantview.lang.JavaSourceFileInterpreter
 import dev.paulshields.assistantview.testcommon.mock
 import org.junit.jupiter.api.Test
 

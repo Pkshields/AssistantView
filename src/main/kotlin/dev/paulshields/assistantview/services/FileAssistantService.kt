@@ -20,7 +20,7 @@ class FileAssistantService(private val fileManagerService: FileManagerService) {
 
     private fun findFileFromExtendsClasses(file: AssistantViewFile): AssistantViewFile? {
         val extendsClass = file.mainClass?.let {
-            it.superClass ?: it.interfaces.firstOrNull()
+            it.superClasses.firstOrNull() ?: it.interfaces.firstOrNull()
         }
 
         return extendsClass?.let { fileManagerService.getFileFromClass(it) }

@@ -4,10 +4,9 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
-import assertk.assertions.isNull
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiClass
-import dev.paulshields.assistantview.extensions.extendsClass
+import dev.paulshields.assistantview.extensions.extendsClasses
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -24,19 +23,20 @@ class JvmAssistantViewClassTest {
     private val target = JvmAssistantViewClass(psiClass, project)
 
     @Test
-    fun `should get super class`() {
-        mockkStatic(PsiClass::extendsClass)
-        every { psiClass.extendsClass } returns superClass
+    fun `should get super classes`() {
+        mockkStatic(PsiClass::extendsClasses)
+        every { psiClass.extendsClasses } returns listOf(superClass)
 
-        assertThat(target.superClass?.name).isEqualTo(superClassName)
+        assertThat(target.superClasses).hasSize(1)
+        assertThat(target.superClasses.first().name).isEqualTo(superClassName)
     }
 
     @Test
     fun `should return null if class has no super class`() {
-        mockkStatic(PsiClass::extendsClass)
-        every { psiClass.extendsClass } returns null
+        mockkStatic(PsiClass::extendsClasses)
+        every { psiClass.extendsClasses } returns emptyList()
 
-        assertThat(target.superClass).isNull()
+        assertThat(target.superClasses).isEmpty()
     }
 
     @Test

@@ -15,7 +15,7 @@ class FileAssistantServiceTest {
     private val project = mock<Project>()
     private val fileManagerService = mock<FileManagerService>()
     private val file = mock<AssistantViewFile>().apply {
-        every { mainClass?.superClass } returns null
+        every { mainClass?.superClasses } returns emptyList()
         every { mainClass?.interfaces } returns emptyList()
         every { project } returns this@FileAssistantServiceTest.project
     }
@@ -26,7 +26,7 @@ class FileAssistantServiceTest {
     @Test
     fun `should return super class as counterpart class`() {
         val superClass = mock<AssistantViewClass>()
-        every { file.mainClass?.superClass } returns superClass
+        every { file.mainClass?.superClasses } returns listOf(superClass)
         every { fileManagerService.getFileFromClass(superClass) } returns counterpartFile
 
         val result = target.getCounterpartFile(file)
@@ -83,7 +83,7 @@ class FileAssistantServiceTest {
 
         verify {
             fileManagerService.findFileWithName(any(), project)
-            file.mainClass?.superClass
+            file.mainClass?.superClasses
             file.mainClass?.interfaces
         }
     }
