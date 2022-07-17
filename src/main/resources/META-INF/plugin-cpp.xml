@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="dev.paulshields.assistantview">
+        <sourceFileInterpreter implementation="dev.paulshields.assistantview.lang.CppSourceFileInterpreter"/>
+    </extensions>
+</idea-plugin>

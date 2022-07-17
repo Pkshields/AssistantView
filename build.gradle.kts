@@ -35,6 +35,7 @@ tasks.buildSearchableOptions { enabled = false }
 dependencies {
     implementation(project(":common"))
     implementation(project(":jvm"))
+    implementation(project(":cpp"))
 }
 
 allprojects {
