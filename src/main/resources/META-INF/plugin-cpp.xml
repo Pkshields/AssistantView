@@ -1,5 +1,6 @@
 <idea-plugin>
     <extensions defaultExtensionNs="dev.paulshields.assistantview">
         <sourceFileInterpreter implementation="dev.paulshields.assistantview.lang.CppSourceFileInterpreter"/>
+        <pairedFileFinder implementation="dev.paulshields.assistantview.lang.CppPairedFileFinder"/>
     </extensions>
 </idea-plugin>

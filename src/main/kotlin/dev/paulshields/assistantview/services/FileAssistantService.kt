@@ -2,14 +2,23 @@ package dev.paulshields.assistantview.services
 
 import dev.paulshields.assistantview.extensions.extractGroups
 import dev.paulshields.assistantview.lang.AssistantViewFile
+import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 
-class FileAssistantService(private val fileManagerService: FileManagerService) {
+class FileAssistantService(
+    private val fileManagerService: FileManagerService,
+    intellijExtensionPoints: IntellijExtensionPoints) {
+
+    private val pairedFileFinders = intellijExtensionPoints.pairedFileFinders.extensionList
     private val fileNameTestSuiteRegex = "(\\w+?)(Unit)?Test".toRegex()
 
     fun getCounterpartFile(file: AssistantViewFile) =
-        findTargetFileIfTestSuite(file)
+        findLanguageSpecificPairedFile(file)
+            ?: findTargetFileIfTestSuite(file)
             ?: findFileFromExtendsClasses(file)
             ?: findUnitTestForFile(file)
+
+    private fun findLanguageSpecificPairedFile(file: AssistantViewFile) =
+        pairedFileFinders.firstNotNullOfOrNull { it.findPairedFile(file) }
 
     private fun findTargetFileIfTestSuite(file: AssistantViewFile): AssistantViewFile? {
         val name = fileNameTestSuiteRegex

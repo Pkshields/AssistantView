@@ -23,7 +23,7 @@ class DependencyInjector : AppLifecycleListener {
         single { IntellijFileSystemService() }
         single { IntellijExtensionPoints() }
         single { FileManagerService(get(), get()) }
-        single { FileAssistantService(get()) }
+        single { FileAssistantService(get(), get()) }
         single { AssistantViewService() }
 
         single { IntellijSingletons() }

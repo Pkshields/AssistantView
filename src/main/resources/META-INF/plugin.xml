@@ -14,6 +14,7 @@
 
     <extensionPoints>
         <extensionPoint name="sourceFileInterpreter" interface="dev.paulshields.assistantview.lang.SourceFileInterpreter"/>
+        <extensionPoint name="pairedFileFinder" interface="dev.paulshields.assistantview.lang.PairedFileFinder"/>
     </extensionPoints>
 
     <applicationListeners>

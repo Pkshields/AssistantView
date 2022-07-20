@@ -7,8 +7,10 @@ import assertk.assertions.isNull
 import com.intellij.openapi.project.Project
 import com.jetbrains.cidr.lang.psi.impl.OCFileImpl
 import com.jetbrains.cidr.lang.symbols.cpp.OCStructSymbol
+import dev.paulshields.assistantview.extensions.classes
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
+import io.mockk.mockkStatic
 import org.junit.jupiter.api.Test
 
 class CppAssistantViewFileTest {
@@ -20,8 +22,9 @@ class CppAssistantViewFileTest {
         every { name } returns mainClassName
     }
     private val file = mock<OCFileImpl>().apply {
+        mockkStatic(OCFileImpl::classes)
         every { name } returns fileName
-        every { symbolTable?.contents } returns listOf(mainClass, mainClass)
+        every { classes } returns listOf(mainClass, mainClass)
     }
 
     private val target = CppAssistantViewFile(file, project)
@@ -48,7 +51,7 @@ class CppAssistantViewFileTest {
 
     @Test
     fun `should return null if file contains no classes`() {
-        every { file.symbolTable?.contents } returns emptyList()
+        every { file.classes } returns emptyList()
 
         assertThat(target.mainClass).isNull()
     }
