@@ -10,6 +10,7 @@ version = "1.0-SNAPSHOT"
 val intellijType: String by project
 val intellijVersion: String by project
 val intellijPlugins: String by project
+val intellijLocalPath: String? by project
 val detektConfigFile = files("detekt-config.yml")
 
 plugins {
@@ -25,8 +26,13 @@ plugins {
 
 intellij {
     type.set(intellijType)
-    version.set(intellijVersion)
     plugins.set(intellijPlugins.split(","))
+
+    if (intellijLocalPath.isNullOrEmpty()) {
+        version.set(intellijVersion)
+    } else {
+        localPath.set(intellijLocalPath)
+    }
 }
 
 // Disabled until AssistantView has a need for custom settings to speed up the build process
@@ -45,7 +51,7 @@ allprojects {
     apply<JavaTestFixturesPlugin>()
 
     tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
 
     configure<KtlintExtension> {
