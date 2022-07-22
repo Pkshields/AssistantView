@@ -8,9 +8,13 @@ group = "dev.paulshields.assistantview"
 version = "1.0-SNAPSHOT"
 
 val intellijType: String by project
-val intellijVersion: String by project
+val intellijTargetVersion: String by project
 val intellijPlugins: String by project
 val intellijLocalPath: String? by project
+
+val intellijMinimumBuildNumber: String by project
+val intellijLatestBuildNumber: String by project
+
 val detektConfigFile = files("detekt-config.yml")
 
 plugins {
@@ -29,10 +33,15 @@ intellij {
     plugins.set(intellijPlugins.split(","))
 
     if (intellijLocalPath.isNullOrEmpty()) {
-        version.set(intellijVersion)
+        version.set(intellijTargetVersion)
     } else {
         localPath.set(intellijLocalPath)
     }
+}
+
+tasks.patchPluginXml {
+    sinceBuild.set(intellijMinimumBuildNumber)
+    untilBuild.set(intellijLatestBuildNumber)
 }
 
 // Disabled until AssistantView has a need for custom settings to speed up the build process

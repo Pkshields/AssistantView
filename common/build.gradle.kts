@@ -3,12 +3,12 @@ plugins {
 }
 
 val intellijType: String by project
-val intellijVersion: String by project
+val intellijTargetVersion: String by project
 val intellijPlugins: String by project
 
 intellij {
     type.set(intellijType)
-    version.set(intellijVersion)
+    version.set(intellijTargetVersion)
     plugins.set(intellijPlugins.split(","))
 }
 

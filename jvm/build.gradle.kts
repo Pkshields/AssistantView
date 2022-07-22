@@ -2,11 +2,11 @@ plugins {
     id("org.jetbrains.intellij")
 }
 
-val intellijVersion: String by project
+val intellijTargetVersion: String by project
 
 intellij {
     type.set("IC")
-    version.set(intellijVersion)
+    version.set(intellijTargetVersion)
     plugins.set(listOf("com.intellij.java", "org.jetbrains.kotlin"))
 }
 
