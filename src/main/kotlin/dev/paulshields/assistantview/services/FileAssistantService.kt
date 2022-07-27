@@ -13,12 +13,18 @@ class FileAssistantService(
 
     fun getCounterpartFile(file: AssistantViewFile) =
         findLanguageSpecificPairedFile(file)
+            ?: findPairedFileByFileName(file)
             ?: findTargetFileIfTestSuite(file)
             ?: findFileFromExtendsClasses(file)
             ?: findUnitTestForFile(file)
 
     private fun findLanguageSpecificPairedFile(file: AssistantViewFile) =
         pairedFileFinders.firstNotNullOfOrNull { it.findPairedFile(file) }
+
+    private fun findPairedFileByFileName(file: AssistantViewFile) =
+        fileManagerService
+            .findFilesMatchingRegex("${file.name}.(?!${file.extension})".toRegex(), file.project)
+            .firstOrNull()
 
     private fun findTargetFileIfTestSuite(file: AssistantViewFile): AssistantViewFile? {
         val name = fileNameTestSuiteRegex

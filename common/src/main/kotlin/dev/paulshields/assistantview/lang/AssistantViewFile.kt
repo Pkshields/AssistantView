@@ -17,6 +17,10 @@ abstract class AssistantViewFile(val psiFile: PsiFile, val project: Project) {
         fileName.substring(0, fileName.lastIndexOfOrNull('.') ?: fileName.length)
     }
 
+    val extension by lazy {
+        fileName.substring(fileName.lastIndexOfOrNull('.')?.plus(1) ?: fileName.length, fileName.length)
+    }
+
     protected abstract fun getClassesFromFile(): List<AssistantViewClass>
 
     override fun toString() = fileName

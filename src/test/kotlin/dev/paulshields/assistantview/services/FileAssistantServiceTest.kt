@@ -14,9 +14,11 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 class FileAssistantServiceTest {
+    private val alternateExtension = "cpp"
     private val project = mock<Project>()
     private val file = mock<AssistantViewFile>().apply {
         every { name } returns "LuigiUnitTest"
+        every { extension } returns "kt"
         every { mainClass?.superClasses } returns emptyList()
         every { mainClass?.interfaces } returns emptyList()
         every { project } returns this@FileAssistantServiceTest.project
@@ -27,12 +29,69 @@ class FileAssistantServiceTest {
     }
     private val fileManagerService = mock<FileManagerService>().apply {
         every { findFileWithName(any(), project) } returns null
+        every { findFilesMatchingRegex(any(), project) } returns emptyList()
     }
     private val intellijExtensionPoints = mock<IntellijExtensionPoints>().apply {
         every { pairedFileFinders.extensionList } returns listOf(pairedFileFinder)
     }
 
     private val target = FileAssistantService(fileManagerService, intellijExtensionPoints)
+
+    @Test
+    fun `should find and return language specific paired file`() {
+        every { pairedFileFinder.findPairedFile(file) } returns counterpartFile
+
+        val result = target.getCounterpartFile(file)
+
+        assertThat(result).isEqualTo(counterpartFile)
+    }
+
+    @Test
+    fun `should fall back to standard counterpart class logic if no paired file is found`() {
+        every { pairedFileFinder.findPairedFile(file) } returns null
+
+        val result = target.getCounterpartFile(file)
+
+        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+    }
+
+    @Test
+    fun `should fall back to standard counterpart class logic if no paired file finders are available`() {
+        every { intellijExtensionPoints.pairedFileFinders.extensionList } returns emptyList()
+
+        val result = target.getCounterpartFile(file)
+
+        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+    }
+
+    @Test
+    fun `should find and return paired file by file name`() {
+        val alternateFileName = "${file.name}.$alternateExtension"
+        every { fileManagerService.findFilesMatchingRegex(match { it.containsMatchIn(alternateFileName) }, project) } returns listOf(counterpartFile)
+
+        val result = target.getCounterpartFile(file)
+
+        assertThat(result).isEqualTo(counterpartFile)
+    }
+
+    @Test
+    fun `should not return opened file as counterpart file as paired file by file name`() {
+        val fileName = "${file.name}.${file.extension}"
+        every { fileManagerService.findFilesMatchingRegex(match { it.containsMatchIn(fileName) }, project) } returns listOf(file)
+
+        val result = target.getCounterpartFile(file)
+
+        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+    }
+
+    @Test
+    fun `should fall back to standard counterpart class logic if can not find any paired file by file name`() {
+        every { fileManagerService.findFilesMatchingRegex(any(), project) } returns emptyList()
+
+        val result = target.getCounterpartFile(file)
+
+        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+    }
 
     @Test
     fun `should return super class as counterpart class`() {
@@ -90,51 +149,9 @@ class FileAssistantServiceTest {
         every { file.name } returns "MarioUnitTest"
         every { fileManagerService.findFileWithName(any(), project) } returns null
 
-        target.getCounterpartFile(file)
-
-        verify {
-            pairedFileFinder.findPairedFile(file)
-            fileManagerService.findFileWithName(any(), project)
-            file.mainClass?.superClasses
-            file.mainClass?.interfaces
-        }
-    }
-
-    @Test
-    fun `should find and return language specific paired file`() {
-        every { pairedFileFinder.findPairedFile(file) } returns counterpartFile
-
         val result = target.getCounterpartFile(file)
 
-        assertThat(result).isEqualTo(counterpartFile)
-    }
-
-    @Test
-    fun `should fall back to standard counterpart class logic if no paired file is found`() {
-        every { pairedFileFinder.findPairedFile(file) } returns null
-
-        target.getCounterpartFile(file)
-
-        verify {
-            pairedFileFinder.findPairedFile(file)
-            fileManagerService.findFileWithName(any(), project)
-            file.mainClass?.superClasses
-            file.mainClass?.interfaces
-        }
-    }
-
-    @Test
-    fun `should fall back to standard counterpart class logic if no paired file finders are available`() {
-        every { intellijExtensionPoints.pairedFileFinders.extensionList } returns emptyList()
-
-        target.getCounterpartFile(file)
-
-        verify {
-            pairedFileFinder.findPairedFile(file)
-            fileManagerService.findFileWithName(any(), project)
-            file.mainClass?.superClasses
-            file.mainClass?.interfaces
-        }
+        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
     }
 
     @Test
@@ -142,5 +159,18 @@ class FileAssistantServiceTest {
         val result = target.getCounterpartFile(file)
 
         assertThat(result).isNull()
+    }
+
+    private fun verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result: AssistantViewFile?) {
+        assertThat(result).isNull()
+
+        verify {
+            pairedFileFinder.findPairedFile(file)
+            fileManagerService.findFilesMatchingRegex(any(), project)
+            fileManagerService.findFileWithName(any(), project)
+            file.mainClass?.superClasses
+            file.mainClass?.interfaces
+            fileManagerService.findFilesMatchingRegex(any(), project)
+        }
     }
 }

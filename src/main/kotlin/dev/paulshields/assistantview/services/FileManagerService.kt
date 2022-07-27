@@ -40,18 +40,16 @@ class FileManagerService(
         return intellijFileSystemService
             .getAllFilenames(project)
             .firstOrNull { it.startsWith(stringToMatch) }
-            ?.let {
-                intellijFileSystemService.findVirtualFileByFilename(it, project)
-                    ?.let { getFileFromVirtualFile(it, project) }
-            }
+            ?.let { getAssistantViewFileFromFileName(it, project) }
     }
 
     fun findFilesMatchingRegex(regex: Regex, project: Project) =
         intellijFileSystemService
             .getAllFilenames(project)
             .filter { regex.containsMatchIn(it) }
-            .mapNotNull {
-                intellijFileSystemService.findVirtualFileByFilename(it, project)
-                    ?.let { getFileFromVirtualFile(it, project) }
-            }
+            .mapNotNull { getAssistantViewFileFromFileName(it, project) }
+
+    private fun getAssistantViewFileFromFileName(fileName: String, project: Project) =
+        intellijFileSystemService.findVirtualFileByFilename(fileName, project)
+            ?.let { getFileFromVirtualFile(it, project) }
 }

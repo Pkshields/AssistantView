@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test
 
 class KotlinAssistantViewFileTest {
     private val name = "ClassName"
-    private val fileName = "$name.kt"
+    private val extension = "kt"
+    private val fileName = "$name.$extension"
     private val mainClassName = "MainClassName"
     private val project = mock<Project>()
     private val mainClass = mock<PsiClass>().apply {
@@ -33,6 +34,11 @@ class KotlinAssistantViewFileTest {
     @Test
     fun `should get name`() {
         assertThat(target.name).isEqualTo(name)
+    }
+
+    @Test
+    fun `should get extension`() {
+        assertThat(target.extension).isEqualTo(extension)
     }
 
     @Test
