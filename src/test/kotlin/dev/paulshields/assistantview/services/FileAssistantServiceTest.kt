@@ -75,9 +75,29 @@ class FileAssistantServiceTest {
     }
 
     @Test
-    fun `should not return opened file as counterpart file as paired file by file name`() {
+    fun `should not return currently opened file as counterpart file as paired file by file name`() {
         val fileName = "${file.name}.${file.extension}"
         every { fileManagerService.findFilesMatchingRegex(match { it.containsMatchIn(fileName) }, project) } returns listOf(file)
+
+        val result = target.getCounterpartFile(file)
+
+        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+    }
+
+    @Test
+    fun `should not return a file that has a similar file name but with a prefix`() {
+        val alternateFileName = "Similar${file.name}.$alternateExtension"
+        every { fileManagerService.findFilesMatchingRegex(match { it.containsMatchIn(alternateFileName) }, project) } returns listOf(counterpartFile)
+
+        val result = target.getCounterpartFile(file)
+
+        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+    }
+
+    @Test
+    fun `should not return a file that has a similar file name but with a suffix`() {
+        val alternateFileName = "${file.name}Similar.$alternateExtension"
+        every { fileManagerService.findFilesMatchingRegex(match { it.containsMatchIn(alternateFileName) }, project) } returns listOf(counterpartFile)
 
         val result = target.getCounterpartFile(file)
 

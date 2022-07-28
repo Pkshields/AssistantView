@@ -23,7 +23,7 @@ class FileAssistantService(
 
     private fun findPairedFileByFileName(file: AssistantViewFile) =
         fileManagerService
-            .findFilesMatchingRegex("${file.name}.(?!${file.extension})".toRegex(), file.project)
+            .findFilesMatchingRegex("^${file.name}\\.(?!${file.extension})".toRegex(), file.project)
             .firstOrNull()
 
     private fun findTargetFileIfTestSuite(file: AssistantViewFile): AssistantViewFile? {
