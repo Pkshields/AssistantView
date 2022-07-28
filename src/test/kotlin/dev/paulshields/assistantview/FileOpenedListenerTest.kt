@@ -11,7 +11,7 @@ import dev.paulshields.assistantview.extensions.runOnUiThread
 import dev.paulshields.assistantview.extensions.runWithReadPermission
 import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.services.AssistantViewService
-import dev.paulshields.assistantview.services.FileAssistantService
+import dev.paulshields.assistantview.services.CounterpartFileService
 import dev.paulshields.assistantview.services.FileManagerService
 import dev.paulshields.assistantview.testcommon.mock
 import dev.paulshields.assistantview.testcommon.mockKoinApplication
@@ -45,7 +45,7 @@ class FileOpenedListenerTest : KoinTest {
     }
 
     private val assistantViewService = mock<AssistantViewService>()
-    private val fileAssistantService = mock<FileAssistantService>().apply {
+    private val counterpartFileService = mock<CounterpartFileService>().apply {
         every { getCounterpartFile(assistantViewFile) } returns assistantViewFile
     }
     private val fileManagerService = mock<FileManagerService>().apply {
@@ -59,7 +59,7 @@ class FileOpenedListenerTest : KoinTest {
     @RegisterExtension
     val dependencyInjector = mockKoinApplication(
         module {
-            single { fileAssistantService }
+            single { counterpartFileService }
             single { fileManagerService }
             single { assistantViewService }
             single { dispatcher }
@@ -109,7 +109,7 @@ class FileOpenedListenerTest : KoinTest {
     fun `should get counterpart file for newly opened file`() {
         target.selectionChanged(fileEditorManagerEvent)
 
-        verify(exactly = 1) { fileAssistantService.getCounterpartFile(assistantViewFile) }
+        verify(exactly = 1) { counterpartFileService.getCounterpartFile(assistantViewFile) }
     }
 
     @Test
@@ -118,7 +118,7 @@ class FileOpenedListenerTest : KoinTest {
 
         target.selectionChanged(fileEditorManagerEvent)
 
-        verify(exactly = 0) { fileAssistantService.getCounterpartFile(any()) }
+        verify(exactly = 0) { counterpartFileService.getCounterpartFile(any()) }
     }
 
     @Test
@@ -130,7 +130,7 @@ class FileOpenedListenerTest : KoinTest {
 
     @Test
     fun `should handle if counterpart file does not exist`() {
-        every { fileAssistantService.getCounterpartFile(assistantViewFile) } returns null
+        every { counterpartFileService.getCounterpartFile(assistantViewFile) } returns null
 
         target.selectionChanged(fileEditorManagerEvent)
 

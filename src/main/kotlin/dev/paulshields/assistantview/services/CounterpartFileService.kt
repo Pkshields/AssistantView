@@ -4,7 +4,7 @@ import dev.paulshields.assistantview.extensions.extractGroups
 import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 
-class FileAssistantService(
+class CounterpartFileService(
     private val fileManagerService: FileManagerService,
     intellijExtensionPoints: IntellijExtensionPoints) {
 

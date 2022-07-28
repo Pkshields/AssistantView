@@ -13,7 +13,7 @@ import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class FileAssistantServiceTest {
+class CounterpartFileServiceTest {
     private val alternateExtension = "cpp"
     private val project = mock<Project>()
     private val file = mock<AssistantViewFile>().apply {
@@ -21,7 +21,7 @@ class FileAssistantServiceTest {
         every { extension } returns "kt"
         every { mainClass?.superClasses } returns emptyList()
         every { mainClass?.interfaces } returns emptyList()
-        every { project } returns this@FileAssistantServiceTest.project
+        every { project } returns this@CounterpartFileServiceTest.project
     }
     private val counterpartFile = mock<AssistantViewFile>()
     private val pairedFileFinder = mock<PairedFileFinder>().apply {
@@ -35,7 +35,7 @@ class FileAssistantServiceTest {
         every { pairedFileFinders.extensionList } returns listOf(pairedFileFinder)
     }
 
-    private val target = FileAssistantService(fileManagerService, intellijExtensionPoints)
+    private val target = CounterpartFileService(fileManagerService, intellijExtensionPoints)
 
     @Test
     fun `should find and return language specific paired file`() {
