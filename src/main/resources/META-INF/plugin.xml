@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin require-restart="true">
     <id>dev.paulshields.assistantview</id>
     <name>Assistant View</name>
     <vendor url="http://paulshields.dev">Paul Shields</vendor>

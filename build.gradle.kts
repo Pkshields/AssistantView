@@ -41,7 +41,6 @@ intellij {
 
 tasks.patchPluginXml {
     sinceBuild.set(intellijMinimumBuildNumber)
-    untilBuild.set(intellijLatestBuildNumber)
 }
 
 // Disabled until AssistantView has a need for custom settings to speed up the build process
