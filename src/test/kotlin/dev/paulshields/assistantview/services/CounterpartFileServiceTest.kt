@@ -9,6 +9,7 @@ import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.lang.PairedFileFinder
 import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 import dev.paulshields.assistantview.testcommon.mock
+import io.mockk.Ordering
 import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -184,12 +185,14 @@ class CounterpartFileServiceTest {
     private fun verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result: AssistantViewFile?) {
         assertThat(result).isNull()
 
-        verify {
+        verify(ordering = Ordering.ORDERED) {
             pairedFileFinder.findPairedFile(file)
             fileManagerService.findFilesMatchingRegex(any(), project)
             fileManagerService.findFileWithName(any(), project)
-            file.mainClass?.superClasses
-            file.mainClass?.interfaces
+            file.mainClass?.apply {
+                superClasses
+                interfaces
+            }
             fileManagerService.findFilesMatchingRegex(any(), project)
         }
     }

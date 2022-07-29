@@ -122,7 +122,7 @@ class AssistantViewEventServiceTest : KoinTest {
 
         target.handleFileOpenedEvent(rawFile, project)
 
-        verify(exactly = 1) {
+        verify(ordering = Ordering.ORDERED) {
             dumbService.runWhenSmart(any())
             assistantViewService.openFile(assistantViewFile)
         }
