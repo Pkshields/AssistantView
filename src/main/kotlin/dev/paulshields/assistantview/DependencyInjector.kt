@@ -7,6 +7,7 @@ import dev.paulshields.assistantview.factories.CodeEditorDocumentFactory
 import dev.paulshields.assistantview.factories.CodeEditorFactory
 import dev.paulshields.assistantview.factories.ToolWindowUIFactory
 import dev.paulshields.assistantview.factories.intellij.IntellijSingletons
+import dev.paulshields.assistantview.services.AssistantViewEventService
 import dev.paulshields.assistantview.services.AssistantViewService
 import dev.paulshields.assistantview.services.CounterpartFileService
 import dev.paulshields.assistantview.services.FileManagerService
@@ -22,9 +23,10 @@ class DependencyInjector : AppLifecycleListener {
 
         single { IntellijFileSystemService() }
         single { IntellijExtensionPoints() }
-        single { FileManagerService(get(), get()) }
-        single { CounterpartFileService(get(), get()) }
+        single { AssistantViewEventService(get(), get(), get(), get()) }
         single { AssistantViewService() }
+        single { CounterpartFileService(get(), get()) }
+        single { FileManagerService(get(), get()) }
 
         single { IntellijSingletons() }
         single { CodeEditorDocumentFactory() }
