@@ -1,7 +1,6 @@
 package dev.paulshields.assistantview.services
 
 import com.intellij.openapi.fileEditor.FileEditorManager
-import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -18,23 +17,25 @@ class AssistantViewEventService(
     private val assistantViewService: AssistantViewService,
     private val dispatcher: Dispatcher) {
 
-    fun handleFileOpenedEvent(event: FileEditorManagerEvent) {
-        if (event.newFile == null) return
-
-        if (event.manager.project.isDumb) {
-            openCounterpartFileWhenProjectExitsDumbMode(event.manager)
+    fun handleFileOpenedEvent(rawFile: VirtualFile, project: Project) {
+        if (project.isDumb) {
+            openCounterpartFileWhenProjectExitsDumbMode(project)
             return
         }
 
-        findAndOpenCounterpartFile(event.newFile, event.manager.project)
+        findAndOpenCounterpartFile(rawFile, project)
     }
 
-    private fun openCounterpartFileWhenProjectExitsDumbMode(fileEditorManager: FileEditorManager) =
-        DumbService.getInstance(fileEditorManager.project).runWhenSmart {
+    private fun openCounterpartFileWhenProjectExitsDumbMode(project: Project) {
+        val dumbService = DumbService.getInstance(project)
+        val fileEditorManager = FileEditorManager.getInstance(project)
+
+        dumbService.runWhenSmart {
             fileEditorManager.selectedEditor?.file?.let {
-                findAndOpenCounterpartFile(it, fileEditorManager.project)
+                findAndOpenCounterpartFile(it, project)
             } ?: logInfo { "Dumb mode has finished but no file is open for project ${fileEditorManager.project.name}. Ignoring." }
         }
+    }
 
     private fun findAndOpenCounterpartFile(rawFile: VirtualFile, project: Project) = dispatcher.runOnBackgroundThread {
         val openedFile = getAssistantViewFile(rawFile, project)
