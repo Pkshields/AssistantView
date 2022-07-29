@@ -46,7 +46,7 @@ class FileOpenedListenerTest : KoinTest {
 
     private val assistantViewService = mock<AssistantViewService>()
     private val counterpartFileService = mock<CounterpartFileService>().apply {
-        every { getCounterpartFile(assistantViewFile) } returns assistantViewFile
+        every { findCounterpartFile(assistantViewFile) } returns assistantViewFile
     }
     private val fileManagerService = mock<FileManagerService>().apply {
         every { getFileFromVirtualFile(virtualFile, project) } returns assistantViewFile
@@ -106,10 +106,10 @@ class FileOpenedListenerTest : KoinTest {
     }
 
     @Test
-    fun `should get counterpart file for newly opened file`() {
+    fun `should find counterpart file for newly opened file`() {
         target.selectionChanged(fileEditorManagerEvent)
 
-        verify(exactly = 1) { counterpartFileService.getCounterpartFile(assistantViewFile) }
+        verify(exactly = 1) { counterpartFileService.findCounterpartFile(assistantViewFile) }
     }
 
     @Test
@@ -118,7 +118,7 @@ class FileOpenedListenerTest : KoinTest {
 
         target.selectionChanged(fileEditorManagerEvent)
 
-        verify(exactly = 0) { counterpartFileService.getCounterpartFile(any()) }
+        verify(exactly = 0) { counterpartFileService.findCounterpartFile(any()) }
     }
 
     @Test
@@ -130,7 +130,7 @@ class FileOpenedListenerTest : KoinTest {
 
     @Test
     fun `should handle if counterpart file does not exist`() {
-        every { counterpartFileService.getCounterpartFile(assistantViewFile) } returns null
+        every { counterpartFileService.findCounterpartFile(assistantViewFile) } returns null
 
         target.selectionChanged(fileEditorManagerEvent)
 

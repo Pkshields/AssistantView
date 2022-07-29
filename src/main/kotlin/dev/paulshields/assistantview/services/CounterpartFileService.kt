@@ -11,7 +11,7 @@ class CounterpartFileService(
     private val pairedFileFinders = intellijExtensionPoints.pairedFileFinders.extensionList
     private val fileNameTestSuiteRegex = "(\\w+?)(Unit)?Test".toRegex()
 
-    fun getCounterpartFile(file: AssistantViewFile) =
+    fun findCounterpartFile(file: AssistantViewFile) =
         findLanguageSpecificPairedFile(file)
             ?: findPairedFileByFileName(file)
             ?: findTargetFileIfTestSuite(file)

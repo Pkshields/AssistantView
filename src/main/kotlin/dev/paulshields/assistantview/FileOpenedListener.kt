@@ -55,7 +55,7 @@ class FileOpenedListener : FileEditorManagerListener, KoinComponent {
         runWithReadPermission { fileManagerService.getFileFromVirtualFile(rawFile, project) }
 
     private fun getCounterpartFile(file: AssistantViewFile) =
-        runWithReadPermission { counterpartFileService.getCounterpartFile(file) }
+        runWithReadPermission { counterpartFileService.findCounterpartFile(file) }
 
     private fun openFileInAssistantView(counterpartFile: AssistantViewFile) =
         runOnUiThread { assistantViewService.openFile(counterpartFile) }

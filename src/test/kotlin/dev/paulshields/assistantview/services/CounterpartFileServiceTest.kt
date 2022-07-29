@@ -41,7 +41,7 @@ class CounterpartFileServiceTest {
     fun `should find and return language specific paired file`() {
         every { pairedFileFinder.findPairedFile(file) } returns counterpartFile
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         assertThat(result).isEqualTo(counterpartFile)
     }
@@ -50,7 +50,7 @@ class CounterpartFileServiceTest {
     fun `should fall back to standard counterpart class logic if no paired file is found`() {
         every { pairedFileFinder.findPairedFile(file) } returns null
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
     }
@@ -59,7 +59,7 @@ class CounterpartFileServiceTest {
     fun `should fall back to standard counterpart class logic if no paired file finders are available`() {
         every { intellijExtensionPoints.pairedFileFinders.extensionList } returns emptyList()
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
     }
@@ -69,7 +69,7 @@ class CounterpartFileServiceTest {
         val alternateFileName = "${file.name}.$alternateExtension"
         every { fileManagerService.findFilesMatchingRegex(match { it.containsMatchIn(alternateFileName) }, project) } returns listOf(counterpartFile)
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         assertThat(result).isEqualTo(counterpartFile)
     }
@@ -79,7 +79,7 @@ class CounterpartFileServiceTest {
         val fileName = "${file.name}.${file.extension}"
         every { fileManagerService.findFilesMatchingRegex(match { it.containsMatchIn(fileName) }, project) } returns listOf(file)
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
     }
@@ -89,7 +89,7 @@ class CounterpartFileServiceTest {
         val alternateFileName = "Similar${file.name}.$alternateExtension"
         every { fileManagerService.findFilesMatchingRegex(match { it.containsMatchIn(alternateFileName) }, project) } returns listOf(counterpartFile)
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
     }
@@ -99,7 +99,7 @@ class CounterpartFileServiceTest {
         val alternateFileName = "${file.name}Similar.$alternateExtension"
         every { fileManagerService.findFilesMatchingRegex(match { it.containsMatchIn(alternateFileName) }, project) } returns listOf(counterpartFile)
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
     }
@@ -108,7 +108,7 @@ class CounterpartFileServiceTest {
     fun `should fall back to standard counterpart class logic if can not find any paired file by file name`() {
         every { fileManagerService.findFilesMatchingRegex(any(), project) } returns emptyList()
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
     }
@@ -119,7 +119,7 @@ class CounterpartFileServiceTest {
         every { file.mainClass?.superClasses } returns listOf(superClass)
         every { fileManagerService.getFileFromClass(superClass) } returns counterpartFile
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         assertThat(result).isEqualTo(counterpartFile)
     }
@@ -130,7 +130,7 @@ class CounterpartFileServiceTest {
         every { file.mainClass?.interfaces } returns listOf(firstInterface)
         every { fileManagerService.getFileFromClass(firstInterface) } returns counterpartFile
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         assertThat(result).isEqualTo(counterpartFile)
     }
@@ -139,7 +139,7 @@ class CounterpartFileServiceTest {
     fun `should return test suite as counterpart class if no base class or interface available`() {
         every { fileManagerService.findFilesMatchingRegex(match { it.pattern.endsWith("Test") }, project) } returns listOf(counterpartFile)
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         assertThat(result).isEqualTo(counterpartFile)
     }
@@ -149,7 +149,7 @@ class CounterpartFileServiceTest {
         every { file.name } returns "MarioTest"
         every { fileManagerService.findFileWithName(eq("Mario"), project) } returns counterpartFile
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         assertThat(result).isEqualTo(counterpartFile)
     }
@@ -159,7 +159,7 @@ class CounterpartFileServiceTest {
         every { file.name } returns "MarioUnitTest"
         every { fileManagerService.findFileWithName(eq("Mario"), project) } returns counterpartFile
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         assertThat(result).isEqualTo(counterpartFile)
     }
@@ -169,14 +169,14 @@ class CounterpartFileServiceTest {
         every { file.name } returns "MarioUnitTest"
         every { fileManagerService.findFileWithName(any(), project) } returns null
 
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
     }
 
     @Test
     fun `should return null if no counterpart class available`() {
-        val result = target.getCounterpartFile(file)
+        val result = target.findCounterpartFile(file)
 
         assertThat(result).isNull()
     }
