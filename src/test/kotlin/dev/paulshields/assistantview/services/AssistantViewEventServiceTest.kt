@@ -10,6 +10,7 @@ import dev.paulshields.assistantview.extensions.runOnUiThread
 import dev.paulshields.assistantview.extensions.runWithReadPermission
 import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.testcommon.mock
+import io.mockk.Ordering
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.verify
@@ -33,7 +34,9 @@ class AssistantViewEventServiceTest : KoinTest {
         every { getComponent(FileEditorManager::class.java) } returns fileEditorManager
     }
 
-    private val assistantViewService = mock<AssistantViewService>()
+    private val assistantViewService = mock<AssistantViewService>().apply {
+        every { assistantViewExistsForProject(project) } returns true
+    }
     private val counterpartFileService = mock<CounterpartFileService>().apply {
         every { findCounterpartFile(assistantViewFile) } returns assistantViewFile
     }
@@ -98,6 +101,15 @@ class AssistantViewEventServiceTest : KoinTest {
     }
 
     @Test
+    fun `should ignore file opened event if no assistant view window is available for project`() {
+        every { assistantViewService.assistantViewExistsForProject(project) } returns false
+
+        target.handleFileOpenedEvent(rawFile, project)
+
+        verify(exactly = 0) { assistantViewService.openFile(any()) }
+    }
+
+    @Test
     fun `should not wait for dumb mode to finish if not in dumb mode`() {
         target.handleFileOpenedEvent(rawFile, project)
 
@@ -117,13 +129,25 @@ class AssistantViewEventServiceTest : KoinTest {
     }
 
     @Test
+    fun `should wait for dumb mode to finish before checking if assistant view window is available`() {
+        every { project.isDumb } returns true
+
+        target.handleFileOpenedEvent(rawFile, project)
+
+        verify(ordering = Ordering.ORDERED) {
+            dumbService.runWhenSmart(any())
+            assistantViewService.assistantViewExistsForProject(project)
+        }
+    }
+
+    @Test
     fun `should not try to open find or open counterpart file until dumb mode is finished`() {
         every { project.isDumb } returns true
         every { dumbService.runWhenSmart(any()) } answers { }
 
         target.handleFileOpenedEvent(rawFile, project)
 
-        verify(exactly = 0) { assistantViewService.openFile(assistantViewFile) }
+        verify(exactly = 0) { assistantViewService.openFile(any()) }
     }
 
     @Test
@@ -133,7 +157,7 @@ class AssistantViewEventServiceTest : KoinTest {
 
         target.handleFileOpenedEvent(rawFile, project)
 
-        verify(exactly = 0) { assistantViewService.openFile(assistantViewFile) }
+        verify(exactly = 0) { assistantViewService.openFile(any()) }
     }
 
     private fun mockIntellijThreadControlFunctions() {

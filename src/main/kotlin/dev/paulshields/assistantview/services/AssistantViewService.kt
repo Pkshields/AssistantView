@@ -24,4 +24,6 @@ class AssistantViewService {
     fun openFile(assistantViewFile: AssistantViewFile) =
         assistantViews[assistantViewFile.project]?.openFile(assistantViewFile)
             ?: run { logError { "No assistant view available for project ${assistantViewFile.project.name}. Ignoring request to open file." } }
+
+    fun assistantViewExistsForProject(project: Project) = assistantViews.containsKey(project)
 }

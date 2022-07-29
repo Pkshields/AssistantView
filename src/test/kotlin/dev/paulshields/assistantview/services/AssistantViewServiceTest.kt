@@ -1,5 +1,8 @@
 package dev.paulshields.assistantview.services
 
+import assertk.assertThat
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import com.intellij.openapi.project.Project
 import dev.paulshields.assistantview.AssistantView
 import dev.paulshields.assistantview.lang.AssistantViewFile
@@ -58,5 +61,21 @@ class AssistantViewServiceTest {
         target.openFile(assistantViewFile)
 
         // assertThat(no crash occurred)
+    }
+
+    @Test
+    fun `should return true if assistant view is registered for project`() {
+        target.registerAssistantViewForProject(assistantView, project)
+
+        val result = target.assistantViewExistsForProject(project)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `should return false if no assistant view is registered for project`() {
+        val result = target.assistantViewExistsForProject(project)
+
+        assertThat(result).isFalse()
     }
 }

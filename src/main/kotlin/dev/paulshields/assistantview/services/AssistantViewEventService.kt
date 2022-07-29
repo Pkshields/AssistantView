@@ -9,6 +9,7 @@ import dev.paulshields.assistantview.extensions.isDumb
 import dev.paulshields.assistantview.extensions.runOnUiThread
 import dev.paulshields.assistantview.extensions.runWithReadPermission
 import dev.paulshields.assistantview.lang.AssistantViewFile
+import dev.paulshields.lok.logDebug
 import dev.paulshields.lok.logInfo
 
 class AssistantViewEventService(
@@ -38,6 +39,11 @@ class AssistantViewEventService(
     }
 
     private fun findAndOpenCounterpartFile(rawFile: VirtualFile, project: Project) = dispatcher.runOnBackgroundThread {
+        if (!assistantViewService.assistantViewExistsForProject(project)) {
+            logDebug { "File opened event received but no Assistant View window is open for this project. Ignoring..." }
+            return@runOnBackgroundThread
+        }
+
         val openedFile = getAssistantViewFile(rawFile, project)
         val counterpartFile = openedFile?.let { getCounterpartFile(it) }
 
