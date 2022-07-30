@@ -20,6 +20,7 @@ import org.koin.test.KoinTest
 
 class AssistantViewEventServiceTest : KoinTest {
     private val assistantViewFile = mock<AssistantViewFile>()
+    private val counterpartFile = mock<AssistantViewFile>()
     private val rawFile = mock<VirtualFile>()
     private val dumbService = mock<DumbService>().apply {
         every { runWhenSmart(any()) } answers { firstArg<Runnable>().run() }
@@ -38,7 +39,7 @@ class AssistantViewEventServiceTest : KoinTest {
         every { assistantViewExistsForProject(project) } returns true
     }
     private val counterpartFileService = mock<CounterpartFileService>().apply {
-        every { findCounterpartFile(assistantViewFile) } returns assistantViewFile
+        every { findCounterpartFile(assistantViewFile) } returns counterpartFile
     }
     private val fileManagerService = mock<FileManagerService>().apply {
         every { getFileFromVirtualFile(rawFile, project) } returns assistantViewFile
@@ -88,7 +89,7 @@ class AssistantViewEventServiceTest : KoinTest {
     fun `should open counterpart file`() {
         target.handleFileOpenedEvent(rawFile, project)
 
-        verify(exactly = 1) { assistantViewService.openFile(assistantViewFile) }
+        verify(exactly = 1) { assistantViewService.openFile(counterpartFile) }
     }
 
     @Test
@@ -124,7 +125,7 @@ class AssistantViewEventServiceTest : KoinTest {
 
         verify(ordering = Ordering.ORDERED) {
             dumbService.runWhenSmart(any())
-            assistantViewService.openFile(assistantViewFile)
+            assistantViewService.openFile(counterpartFile)
         }
     }
 
@@ -156,6 +157,23 @@ class AssistantViewEventServiceTest : KoinTest {
         every { fileEditorManager.selectedEditor } returns null
 
         target.handleFileOpenedEvent(rawFile, project)
+
+        verify(exactly = 0) { assistantViewService.openFile(any()) }
+    }
+
+    @Test
+    fun `should get counterpart file for file in currently focused tab when assistant view event is received`() {
+        target.handleAssistantViewOpenedEvent(project)
+
+        verify(exactly = 1) { assistantViewService.openFile(counterpartFile) }
+        verify { fileEditorManager.selectedEditor?.file }
+    }
+
+    @Test
+    fun `should not try to open any counterpart file if no editor is currently open when assistant view event is received`() {
+        every { fileEditorManager.selectedEditor?.file } returns null
+
+        target.handleAssistantViewOpenedEvent(project)
 
         verify(exactly = 0) { assistantViewService.openFile(any()) }
     }

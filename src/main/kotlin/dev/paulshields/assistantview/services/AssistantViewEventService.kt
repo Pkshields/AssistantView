@@ -27,16 +27,21 @@ class AssistantViewEventService(
         findAndOpenCounterpartFile(rawFile, project)
     }
 
-    private fun openCounterpartFileWhenProjectExitsDumbMode(project: Project) {
-        val dumbService = DumbService.getInstance(project)
-        val fileEditorManager = FileEditorManager.getInstance(project)
+    fun handleAssistantViewOpenedEvent(project: Project) {
+        getRawFileFromCurrentTabInFocus(project)?.let {
+            handleFileOpenedEvent(it, project)
+        } ?: logInfo { "New Assistant View is available but there are no opened tabs in project ${project.name}. Dropping event." }
+    }
 
-        dumbService.runWhenSmart {
-            fileEditorManager.selectedEditor?.file?.let {
+    private fun openCounterpartFileWhenProjectExitsDumbMode(project: Project) {
+        DumbService.getInstance(project).runWhenSmart {
+            getRawFileFromCurrentTabInFocus(project)?.let {
                 findAndOpenCounterpartFile(it, project)
-            } ?: logInfo { "Dumb mode has finished but no file is open for project ${fileEditorManager.project.name}. Ignoring." }
+            } ?: logInfo { "Dumb mode has finished but no file is open for project ${project.name}. Ignoring." }
         }
     }
+
+    private fun getRawFileFromCurrentTabInFocus(project: Project) = FileEditorManager.getInstance(project).selectedEditor?.file
 
     private fun findAndOpenCounterpartFile(rawFile: VirtualFile, project: Project) = dispatcher.runOnBackgroundThread {
         if (!assistantViewService.assistantViewExistsForProject(project)) {
