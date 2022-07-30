@@ -18,7 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.koin.test.KoinTest
 
-class AssistantViewEventServiceTest : KoinTest {
+class AssistantViewFileServiceTest : KoinTest {
     private val assistantViewFile = mock<AssistantViewFile>()
     private val counterpartFile = mock<AssistantViewFile>()
     private val rawFile = mock<VirtualFile>()
@@ -48,7 +48,7 @@ class AssistantViewEventServiceTest : KoinTest {
         every { runOnBackgroundThread(any()) } answers { firstArg<() -> Unit>().invoke() }
     }
 
-    private val target = AssistantViewEventService(counterpartFileService, fileManagerService, assistantViewService, dispatcher)
+    private val target = AssistantViewFileService(counterpartFileService, fileManagerService, assistantViewService, dispatcher)
 
     @BeforeEach
     fun beforeEach() {
@@ -57,21 +57,21 @@ class AssistantViewEventServiceTest : KoinTest {
 
     @Test
     fun `should get assistant view file for newly opened file`() {
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 1) { fileManagerService.getFileFromVirtualFile(rawFile, project) }
     }
 
     @Test
     fun `should get assistant view file on a background thread`() {
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 1) { dispatcher.runOnBackgroundThread(any()) }
     }
 
     @Test
     fun `should find counterpart file for newly opened file`() {
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 1) { counterpartFileService.findCounterpartFile(assistantViewFile) }
     }
@@ -80,14 +80,14 @@ class AssistantViewEventServiceTest : KoinTest {
     fun `should handle if newly opened file can not be processed`() {
         every { fileManagerService.getFileFromVirtualFile(rawFile, project) } returns null
 
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 0) { counterpartFileService.findCounterpartFile(any()) }
     }
 
     @Test
     fun `should open counterpart file`() {
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 1) { assistantViewService.openFile(counterpartFile) }
     }
@@ -96,7 +96,7 @@ class AssistantViewEventServiceTest : KoinTest {
     fun `should handle if counterpart file does not exist`() {
         every { counterpartFileService.findCounterpartFile(assistantViewFile) } returns null
 
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 0) { assistantViewService.openFile(any()) }
     }
@@ -105,14 +105,14 @@ class AssistantViewEventServiceTest : KoinTest {
     fun `should ignore file opened event if no assistant view window is available for project`() {
         every { assistantViewService.assistantViewExistsForProject(project) } returns false
 
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 0) { assistantViewService.openFile(any()) }
     }
 
     @Test
     fun `should not wait for dumb mode to finish if not in dumb mode`() {
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 0) { dumbService.runWhenSmart(any()) }
     }
@@ -121,7 +121,7 @@ class AssistantViewEventServiceTest : KoinTest {
     fun `should wait for dumb mode to finish before opening counterpart file`() {
         every { project.isDumb } returns true
 
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(ordering = Ordering.ORDERED) {
             dumbService.runWhenSmart(any())
@@ -133,7 +133,7 @@ class AssistantViewEventServiceTest : KoinTest {
     fun `should wait for dumb mode to finish before checking if assistant view window is available`() {
         every { project.isDumb } returns true
 
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(ordering = Ordering.ORDERED) {
             dumbService.runWhenSmart(any())
@@ -146,7 +146,7 @@ class AssistantViewEventServiceTest : KoinTest {
         every { project.isDumb } returns true
         every { dumbService.runWhenSmart(any()) } answers { }
 
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 0) { assistantViewService.openFile(any()) }
     }
@@ -156,24 +156,24 @@ class AssistantViewEventServiceTest : KoinTest {
         every { project.isDumb } returns true
         every { fileEditorManager.selectedEditor } returns null
 
-        target.handleFileOpenedEvent(rawFile, project)
+        target.openCounterpartForFile(rawFile, project)
 
         verify(exactly = 0) { assistantViewService.openFile(any()) }
     }
 
     @Test
-    fun `should get counterpart file for file in currently focused tab when assistant view event is received`() {
-        target.handleAssistantViewOpenedEvent(project)
+    fun `should get counterpart file for file in current tab in focus`() {
+        target.openCounterpartForTabInFocus(project)
 
         verify(exactly = 1) { assistantViewService.openFile(counterpartFile) }
         verify { fileEditorManager.selectedEditor?.file }
     }
 
     @Test
-    fun `should not try to open any counterpart file if no editor is currently open when assistant view event is received`() {
+    fun `should not try to open any counterpart file if no editor is currently open`() {
         every { fileEditorManager.selectedEditor?.file } returns null
 
-        target.handleAssistantViewOpenedEvent(project)
+        target.openCounterpartForTabInFocus(project)
 
         verify(exactly = 0) { assistantViewService.openFile(any()) }
     }

@@ -3,7 +3,7 @@ package dev.paulshields.assistantview
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import dev.paulshields.assistantview.services.AssistantViewEventService
+import dev.paulshields.assistantview.services.AssistantViewFileService
 import dev.paulshields.assistantview.testcommon.mock
 import dev.paulshields.assistantview.testcommon.mockKoinApplication
 import io.mockk.every
@@ -16,20 +16,20 @@ import org.koin.test.KoinTest
 class FileOpenedListenerTest : KoinTest {
     private val fileEditorManagerEvent = mock<FileEditorManagerEvent>()
 
-    private val assistantViewEventService = mock<AssistantViewEventService>()
+    private val assistantViewFileService = mock<AssistantViewFileService>()
 
     @JvmField
     @RegisterExtension
     val dependencyInjector = mockKoinApplication(
         module {
-            single { assistantViewEventService }
+            single { assistantViewFileService }
         }
     )
 
     private val target = FileOpenedListener()
 
     @Test
-    fun `should send file opened event to the assistant view event service`() {
+    fun `should open counterpart file when file opened event is received`() {
         val rawFile = mock<VirtualFile>()
         val project = mock<Project>()
         every { fileEditorManagerEvent.newFile } returns rawFile
@@ -37,7 +37,7 @@ class FileOpenedListenerTest : KoinTest {
 
         target.selectionChanged(fileEditorManagerEvent)
 
-        verify(exactly = 1) { assistantViewEventService.handleFileOpenedEvent(rawFile, project) }
+        verify(exactly = 1) { assistantViewFileService.openCounterpartForFile(rawFile, project) }
     }
 
     @Test
@@ -46,6 +46,6 @@ class FileOpenedListenerTest : KoinTest {
 
         target.selectionChanged(fileEditorManagerEvent)
 
-        verify(exactly = 0) { assistantViewEventService.handleFileOpenedEvent(any(), any()) }
+        verify(exactly = 0) { assistantViewFileService.openCounterpartForFile(any(), any()) }
     }
 }

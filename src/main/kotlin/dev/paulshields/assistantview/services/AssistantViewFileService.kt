@@ -12,13 +12,13 @@ import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.lok.logDebug
 import dev.paulshields.lok.logInfo
 
-class AssistantViewEventService(
+class AssistantViewFileService(
     private val counterpartFileService: CounterpartFileService,
     private val fileManagerService: FileManagerService,
     private val assistantViewService: AssistantViewService,
     private val dispatcher: Dispatcher) {
 
-    fun handleFileOpenedEvent(rawFile: VirtualFile, project: Project) {
+    fun openCounterpartForFile(rawFile: VirtualFile, project: Project) {
         if (project.isDumb) {
             openCounterpartFileWhenProjectExitsDumbMode(project)
             return
@@ -27,9 +27,9 @@ class AssistantViewEventService(
         findAndOpenCounterpartFile(rawFile, project)
     }
 
-    fun handleAssistantViewOpenedEvent(project: Project) {
+    fun openCounterpartForTabInFocus(project: Project) {
         getRawFileFromCurrentTabInFocus(project)?.let {
-            handleFileOpenedEvent(it, project)
+            openCounterpartForFile(it, project)
         } ?: logInfo { "New Assistant View is available but there are no opened tabs in project ${project.name}. Dropping event." }
     }
 
