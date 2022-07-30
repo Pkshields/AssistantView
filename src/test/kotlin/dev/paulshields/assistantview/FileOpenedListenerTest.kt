@@ -3,7 +3,7 @@ package dev.paulshields.assistantview
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import dev.paulshields.assistantview.services.AssistantViewFileService
+import dev.paulshields.assistantview.services.FileOpenerService
 import dev.paulshields.assistantview.testcommon.mock
 import dev.paulshields.assistantview.testcommon.mockKoinApplication
 import io.mockk.every
@@ -16,13 +16,13 @@ import org.koin.test.KoinTest
 class FileOpenedListenerTest : KoinTest {
     private val fileEditorManagerEvent = mock<FileEditorManagerEvent>()
 
-    private val assistantViewFileService = mock<AssistantViewFileService>()
+    private val fileOpenerService = mock<FileOpenerService>()
 
     @JvmField
     @RegisterExtension
     val dependencyInjector = mockKoinApplication(
         module {
-            single { assistantViewFileService }
+            single { fileOpenerService }
         }
     )
 
@@ -37,7 +37,7 @@ class FileOpenedListenerTest : KoinTest {
 
         target.selectionChanged(fileEditorManagerEvent)
 
-        verify(exactly = 1) { assistantViewFileService.openCounterpartForFile(rawFile, project) }
+        verify(exactly = 1) { fileOpenerService.openCounterpartForFile(rawFile, project) }
     }
 
     @Test
@@ -46,6 +46,6 @@ class FileOpenedListenerTest : KoinTest {
 
         target.selectionChanged(fileEditorManagerEvent)
 
-        verify(exactly = 0) { assistantViewFileService.openCounterpartForFile(any(), any()) }
+        verify(exactly = 0) { fileOpenerService.openCounterpartForFile(any(), any()) }
     }
 }

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.koin.test.KoinTest
 
-class AssistantViewFileServiceTest : KoinTest {
+class FileOpenerServiceTest : KoinTest {
     private val assistantViewFile = mock<AssistantViewFile>()
     private val counterpartFile = mock<AssistantViewFile>()
     private val rawFile = mock<VirtualFile>()
@@ -48,7 +48,7 @@ class AssistantViewFileServiceTest : KoinTest {
         every { runOnBackgroundThread(any()) } answers { firstArg<() -> Unit>().invoke() }
     }
 
-    private val target = AssistantViewFileService(counterpartFileService, fileManagerService, assistantViewService, dispatcher)
+    private val target = FileOpenerService(counterpartFileService, fileManagerService, assistantViewService, dispatcher)
 
     @BeforeEach
     fun beforeEach() {

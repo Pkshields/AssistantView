@@ -2,13 +2,13 @@ package dev.paulshields.assistantview
 
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
-import dev.paulshields.assistantview.services.AssistantViewFileService
+import dev.paulshields.assistantview.services.FileOpenerService
 import dev.paulshields.lok.logWarn
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class FileOpenedListener : FileEditorManagerListener, KoinComponent {
-    private val assistantViewFileService: AssistantViewFileService by inject()
+    private val fileOpenerService: FileOpenerService by inject()
 
     override fun selectionChanged(event: FileEditorManagerEvent) {
         if (event.newFile == null) {
@@ -16,6 +16,6 @@ class FileOpenedListener : FileEditorManagerListener, KoinComponent {
             return
         }
 
-        assistantViewFileService.openCounterpartForFile(event.newFile, event.manager.project)
+        fileOpenerService.openCounterpartForFile(event.newFile, event.manager.project)
     }
 }

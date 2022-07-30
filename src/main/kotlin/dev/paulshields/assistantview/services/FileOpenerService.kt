@@ -12,7 +12,7 @@ import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.lok.logDebug
 import dev.paulshields.lok.logInfo
 
-class AssistantViewFileService(
+class FileOpenerService(
     private val counterpartFileService: CounterpartFileService,
     private val fileManagerService: FileManagerService,
     private val assistantViewService: AssistantViewService,

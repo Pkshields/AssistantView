@@ -7,7 +7,7 @@ import dev.paulshields.assistantview.factories.CodeEditorDocumentFactory
 import dev.paulshields.assistantview.factories.CodeEditorFactory
 import dev.paulshields.assistantview.factories.ToolWindowUIFactory
 import dev.paulshields.assistantview.factories.intellij.IntellijSingletons
-import dev.paulshields.assistantview.services.AssistantViewFileService
+import dev.paulshields.assistantview.services.FileOpenerService
 import dev.paulshields.assistantview.services.AssistantViewService
 import dev.paulshields.assistantview.services.CounterpartFileService
 import dev.paulshields.assistantview.services.FileManagerService
@@ -23,7 +23,7 @@ class DependencyInjector : AppLifecycleListener {
 
         single { IntellijFileSystemService() }
         single { IntellijExtensionPoints() }
-        single { AssistantViewFileService(get(), get(), get(), get()) }
+        single { FileOpenerService(get(), get(), get(), get()) }
         single { AssistantViewService() }
         single { CounterpartFileService(get(), get()) }
         single { FileManagerService(get(), get()) }
