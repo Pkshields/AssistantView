@@ -19,6 +19,7 @@
 
     <applicationListeners>
         <listener class="dev.paulshields.assistantview.DependencyInjector" topic="com.intellij.ide.AppLifecycleListener" />
+        <listener class="dev.paulshields.assistantview.FileDeletedListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener" />
     </applicationListeners>
 
     <projectListeners>

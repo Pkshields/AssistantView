@@ -5,8 +5,8 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import dev.paulshields.assistantview.factories.AssistantViewFactory
-import dev.paulshields.assistantview.services.FileOpenerService
 import dev.paulshields.assistantview.services.AssistantViewService
+import dev.paulshields.assistantview.services.FileOpenerService
 import dev.paulshields.lok.logInfo
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

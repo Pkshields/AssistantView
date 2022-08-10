@@ -7,10 +7,12 @@ import dev.paulshields.assistantview.lang.AssistantViewClass
 import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 import dev.paulshields.assistantview.services.intellij.IntellijFileSystemService
+import dev.paulshields.assistantview.services.intellij.IntellijProjectLocator
 import dev.paulshields.lok.logWarn
 
 class FileManagerService(
     private val intellijFileSystemService: IntellijFileSystemService,
+    private val intellijProjectLocator: IntellijProjectLocator,
     intellijExtensionPoints: IntellijExtensionPoints) {
 
     private val sourceFileInterpreters = intellijExtensionPoints.sourceFileInterpreters.extensionList
@@ -25,6 +27,10 @@ class FileManagerService(
             null
         }
     }
+
+    fun getFileFromVirtualFile(virtualFile: VirtualFile) =
+        intellijProjectLocator.getProjectForVirtualFile(virtualFile)
+            ?.let { getFileFromVirtualFile(virtualFile, it) }
 
     fun getFileFromClass(clazz: AssistantViewClass) =
         clazz.containingFile?.let {

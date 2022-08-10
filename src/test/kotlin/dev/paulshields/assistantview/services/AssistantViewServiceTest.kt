@@ -12,10 +12,15 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 class AssistantViewServiceTest {
-    private val assistantView = mock<AssistantView>()
     private val project = mock<Project>()
-    private val assistantViewFile = mock<AssistantViewFile>().apply {
+    private val fileToOpen = mock<AssistantViewFile>().apply {
         every { this@apply.project } returns this@AssistantViewServiceTest.project
+    }
+    private val otherFile = mock<AssistantViewFile>().apply {
+        every { this@apply.project } returns this@AssistantViewServiceTest.project
+    }
+    private val assistantView = mock<AssistantView>().apply {
+        every { currentFile } returns fileToOpen
     }
 
     private val target = AssistantViewService()
@@ -23,9 +28,9 @@ class AssistantViewServiceTest {
     @Test
     fun `should register new assistant view in service and open file`() {
         target.registerAssistantViewForProject(assistantView, project)
-        target.openFile(assistantViewFile)
+        target.openFile(fileToOpen)
 
-        verify(exactly = 1) { assistantView.openFile(assistantViewFile) }
+        verify(exactly = 1) { assistantView.openFile(fileToOpen) }
     }
 
     @Test
@@ -34,19 +39,19 @@ class AssistantViewServiceTest {
 
         target.registerAssistantViewForProject(assistantView, project)
         target.registerAssistantViewForProject(secondAssistantView, project)
-        target.openFile(assistantViewFile)
+        target.openFile(fileToOpen)
 
-        verify(exactly = 0) { assistantView.openFile(assistantViewFile) }
-        verify(exactly = 1) { secondAssistantView.openFile(assistantViewFile) }
+        verify(exactly = 0) { assistantView.openFile(fileToOpen) }
+        verify(exactly = 1) { secondAssistantView.openFile(fileToOpen) }
     }
 
     @Test
     fun `should remove assistant view from service when project is closed`() {
         target.registerAssistantViewForProject(assistantView, project)
         target.closeAssistantViewForProject(project)
-        target.openFile(assistantViewFile)
+        target.openFile(fileToOpen)
 
-        verify(exactly = 0) { assistantView.openFile(assistantViewFile) }
+        verify(exactly = 0) { assistantView.openFile(fileToOpen) }
     }
 
     @Test
@@ -58,7 +63,7 @@ class AssistantViewServiceTest {
 
     @Test
     fun `should handle trying to open file for project that does not have an assistant view opened`() {
-        target.openFile(assistantViewFile)
+        target.openFile(fileToOpen)
 
         // assertThat(no crash occurred)
     }
@@ -77,5 +82,32 @@ class AssistantViewServiceTest {
         val result = target.assistantViewExistsForProject(project)
 
         assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `should close file that is open in assistant view`() {
+        target.registerAssistantViewForProject(assistantView, project)
+        target.openFile(fileToOpen)
+
+        target.closeFile(fileToOpen)
+
+        verify(exactly = 1) { assistantView.reset() }
+    }
+
+    @Test
+    fun `should ignore close file request if file is not opened`() {
+        target.registerAssistantViewForProject(assistantView, project)
+        target.openFile(fileToOpen)
+
+        target.closeFile(otherFile)
+
+        verify(exactly = 0) { assistantView.reset() }
+    }
+
+    @Test
+    fun `should ignore close file request if no assistant view exists for project`() {
+        target.closeFile(fileToOpen)
+
+        // assertThat(Nothing happens, as expected)
     }
 }

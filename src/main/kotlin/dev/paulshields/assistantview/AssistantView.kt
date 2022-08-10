@@ -8,6 +8,8 @@ import com.intellij.openapi.wm.ToolWindow
 import dev.paulshields.assistantview.factories.CodeEditorFactory
 import dev.paulshields.assistantview.factories.ToolWindowUIFactory
 import dev.paulshields.assistantview.lang.AssistantViewFile
+import dev.paulshields.lok.logDebug
+import dev.paulshields.lok.logInfo
 
 class AssistantView(
     private val toolWindowUIFactory: ToolWindowUIFactory,
@@ -15,34 +17,52 @@ class AssistantView(
     private val toolWindow: ToolWindow,
     project: Project) : Disposable {
 
+    var currentFile: AssistantViewFile? = null
+        private set
+
     private var editor: Editor? = null
 
     init {
         Disposer.register(project, this)
-        setupStartupAssistantViewContent()
+        addDefaultAssistantViewContentToToolWindow()
     }
 
     fun openFile(assistantViewFile: AssistantViewFile) {
+        logDebug { "Opening ${assistantViewFile.name} in Assistant View for project ${assistantViewFile.project.name}." }
+
         codeEditorFactory.createEditor(assistantViewFile)?.let {
             openNewEditor(it)
         }
+        currentFile = assistantViewFile
     }
 
-    private fun setupStartupAssistantViewContent() = toolWindow.contentManager.addContent(toolWindowUIFactory.createStartupAssistantViewContent())
+    fun reset() {
+        logInfo { "Resetting Assistant View for project ${currentFile?.project?.name}." }
+
+        clearToolWindow()
+        addDefaultAssistantViewContentToToolWindow()
+        currentFile = null
+        editor = null
+    }
+
+    private fun addDefaultAssistantViewContentToToolWindow() =
+        toolWindow.contentManager.addContent(toolWindowUIFactory.createStartupAssistantViewContent())
 
     private fun openNewEditor(newEditor: Editor) {
-        toolWindow.contentManager.removeAllContents(true)
+        clearToolWindow()
 
         val editorContent = toolWindowUIFactory.createContentForCodeEditor(newEditor)
         toolWindow.contentManager.addContent(editorContent)
 
-        destroyOpenEditor()
         editor = newEditor
     }
 
-    private fun destroyOpenEditor() = editor?.let { codeEditorFactory.destroyEditor(it) }
+    private fun clearToolWindow() {
+        toolWindow.contentManager.removeAllContents(true)
+        editor?.let { codeEditorFactory.destroyEditor(it) }
+    }
 
     override fun dispose() {
-        destroyOpenEditor()
+        clearToolWindow()
     }
 }

@@ -15,8 +15,10 @@ import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.lang.SourceFileInterpreter
 import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 import dev.paulshields.assistantview.services.intellij.IntellijFileSystemService
+import dev.paulshields.assistantview.services.intellij.IntellijProjectLocator
 import dev.paulshields.assistantview.testcommon.mock
 import io.mockk.every
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class FileManagerServiceTest {
@@ -52,148 +54,200 @@ class FileManagerServiceTest {
     private val intellijExtensionPoints = mock<IntellijExtensionPoints>().apply {
         every { sourceFileInterpreters } returns interpreters
     }
-
-    private val target = FileManagerService(intellijFileSystemService, intellijExtensionPoints)
-
-    @Test
-    fun `should get assistant view file from virtualfile supported by injected parsers`() {
-        val result = target.getFileFromVirtualFile(virtualFile, project)
-
-        assertThat(result).isEqualTo(assistantViewFile)
+    private val intellijProjectLocator = mock<IntellijProjectLocator>().apply {
+        every { getProjectForVirtualFile(virtualFile) } returns project
     }
 
-    @Test
-    fun `should return null if code in virtualfile is unsupported by injected parsers`() {
-        every { psiManager.findFile(virtualFile) } returns unsupportedFile
+    private val target = FileManagerService(intellijFileSystemService, intellijProjectLocator, intellijExtensionPoints)
 
-        val result = target.getFileFromVirtualFile(virtualFile, project)
+    @Nested
+    inner class GetFileFromVirtualFile {
+        @Test
+        fun `should get assistant view file from virtualfile supported by injected parsers`() {
+            val result = target.getFileFromVirtualFile(virtualFile, project)
 
-        assertThat(result).isNull()
+            assertThat(result).isEqualTo(assistantViewFile)
+        }
+
+        @Test
+        fun `should return null if code in virtualfile is unsupported by injected parsers`() {
+            every { psiManager.findFile(virtualFile) } returns unsupportedFile
+
+            val result = target.getFileFromVirtualFile(virtualFile, project)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `should return null if there is no underlying code file in virtualfile`() {
+            every { psiManager.findFile(virtualFile) } returns null
+
+            val result = target.getFileFromVirtualFile(virtualFile, project)
+
+            assertThat(result).isNull()
+        }
     }
 
-    @Test
-    fun `should return null if there is no underlying code file in virtualfile`() {
-        every { psiManager.findFile(virtualFile) } returns null
+    @Nested
+    inner class GetFileFromVirtualFileWithoutProjectProvided {
+        @Test
+        fun `should get assistant view file from virtualfile supported by injected parsers`() {
+            val result = target.getFileFromVirtualFile(virtualFile)
 
-        val result = target.getFileFromVirtualFile(virtualFile, project)
+            assertThat(result).isEqualTo(assistantViewFile)
+        }
 
-        assertThat(result).isNull()
+        @Test
+        fun `should return null if virtualfile does not exist in any currently opened projects`() {
+            every { intellijProjectLocator.getProjectForVirtualFile(virtualFile) } returns null
+
+            val result = target.getFileFromVirtualFile(virtualFile)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `should return null if code in virtualfile is unsupported by injected parsers`() {
+            every { psiManager.findFile(virtualFile) } returns unsupportedFile
+
+            val result = target.getFileFromVirtualFile(virtualFile)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `should return null if there is no underlying code file in virtualfile`() {
+            every { psiManager.findFile(virtualFile) } returns null
+
+            val result = target.getFileFromVirtualFile(virtualFile)
+
+            assertThat(result).isNull()
+        }
     }
 
-    @Test
-    fun `should get assistant view file from class type that is supported by the injected parsers`() {
-        val result = target.getFileFromClass(assistantViewClass)
+    @Nested
+    inner class GetFileFromClass {
+        @Test
+        fun `should get assistant view file from class type that is supported by the injected parsers`() {
+            val result = target.getFileFromClass(assistantViewClass)
 
-        assertThat(result).isEqualTo(assistantViewFile)
+            assertThat(result).isEqualTo(assistantViewFile)
+        }
+
+        @Test
+        fun `should return null if the class is unsupported`() {
+            every { psiManager.findFile(virtualFile) } returns unsupportedFile
+
+            val result = target.getFileFromClass(assistantViewClass)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `should return null if the class has no file in current project`() {
+            every { assistantViewClass.containingFile } returns null
+
+            val result = target.getFileFromClass(assistantViewClass)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `should return null if the class has no file containing code in current project`() {
+            every { psiManager.findFile(virtualFile) } returns null
+
+            val result = target.getFileFromClass(assistantViewClass)
+
+            assertThat(result).isNull()
+        }
     }
 
-    @Test
-    fun `should return null if the class is unsupported`() {
-        every { psiManager.findFile(virtualFile) } returns unsupportedFile
+    @Nested
+    inner class FileFileWithName {
+        @Test
+        fun `should get assistant view file for name of file`() {
+            val result = target.findFileWithName(name, project)
 
-        val result = target.getFileFromClass(assistantViewClass)
+            assertThat(result).isEqualTo(assistantViewFile)
+        }
 
-        assertThat(result).isNull()
+        @Test
+        fun `should return empty list if no file with name exist`() {
+            val result = target.findFileWithName("InvalidFileName", project)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `should return null if no virtualfile available for file with name`() {
+            every { intellijFileSystemService.findVirtualFileByFilename(fileName, project) } returns null
+
+            val result = target.findFileWithName(name, project)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `should return null if code in virtualfiles for file with name is unsupported by the injected parsers`() {
+            every { psiManager.findFile(virtualFile) } returns unsupportedFile
+
+            val result = target.findFileWithName(name, project)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
+        fun `should return null if there is no underlying code file for file with name`() {
+            every { psiManager.findFile(virtualFile) } returns null
+
+            val result = target.findFileWithName(name, project)
+
+            assertThat(result).isNull()
+        }
     }
 
-    @Test
-    fun `should return null if the class has no file in current project`() {
-        every { assistantViewClass.containingFile } returns null
+    @Nested
+    inner class FindFilesMatchingRegex {
+        @Test
+        fun `should get assistant view file whose filename matches regex`() {
+            val result = target.findFilesMatchingRegex(fileName.toRegex(), project)
 
-        val result = target.getFileFromClass(assistantViewClass)
+            assertThat(result).hasSize(1)
+            assertThat(result[0]).isEqualTo(assistantViewFile)
+        }
 
-        assertThat(result).isNull()
-    }
+        @Test
+        fun `should return empty list if no filenames match regex`() {
+            val result = target.findFilesMatchingRegex("InvalidFileName.java".toRegex(), project)
 
-    @Test
-    fun `should return null if the class has no file containing code in current project`() {
-        every { psiManager.findFile(virtualFile) } returns null
+            assertThat(result).isEmpty()
+        }
 
-        val result = target.getFileFromClass(assistantViewClass)
+        @Test
+        fun `should return empty list if no virtualfile available for any files that match regex`() {
+            every { intellijFileSystemService.findVirtualFileByFilename(fileName, project) } returns null
 
-        assertThat(result).isNull()
-    }
+            val result = target.findFilesMatchingRegex(fileName.toRegex(), project)
 
-    @Test
-    fun `should get assistant view file for name of file`() {
-        val result = target.findFileWithName(name, project)
+            assertThat(result).isEmpty()
+        }
 
-        assertThat(result).isEqualTo(assistantViewFile)
-    }
+        @Test
+        fun `should return empty list if code in virtualfiles that match regex is unsupported by the injected parsers`() {
+            every { psiManager.findFile(virtualFile) } returns unsupportedFile
 
-    @Test
-    fun `should return empty list if no file with name exist`() {
-        val result = target.findFileWithName("InvalidFileName", project)
+            val result = target.findFilesMatchingRegex(fileName.toRegex(), project)
 
-        assertThat(result).isNull()
-    }
+            assertThat(result).isEmpty()
+        }
 
-    @Test
-    fun `should return null if no virtualfile available for file with name`() {
-        every { intellijFileSystemService.findVirtualFileByFilename(fileName, project) } returns null
+        @Test
+        fun `should return empty list if there is no underlying code file in files that match regex`() {
+            every { psiManager.findFile(virtualFile) } returns null
 
-        val result = target.findFileWithName(name, project)
+            val result = target.findFilesMatchingRegex(fileName.toRegex(), project)
 
-        assertThat(result).isNull()
-    }
-
-    @Test
-    fun `should return null if code in virtualfiles for file with name is unsupported by the injected parsers`() {
-        every { psiManager.findFile(virtualFile) } returns unsupportedFile
-
-        val result = target.findFileWithName(name, project)
-
-        assertThat(result).isNull()
-    }
-
-    @Test
-    fun `should return null if there is no underlying code file for file with name`() {
-        every { psiManager.findFile(virtualFile) } returns null
-
-        val result = target.findFileWithName(name, project)
-
-        assertThat(result).isNull()
-    }
-
-    @Test
-    fun `should get assistant view file whose filename matches regex`() {
-        val result = target.findFilesMatchingRegex(fileName.toRegex(), project)
-
-        assertThat(result).hasSize(1)
-        assertThat(result[0]).isEqualTo(assistantViewFile)
-    }
-
-    @Test
-    fun `should return empty list if no filenames match regex`() {
-        val result = target.findFilesMatchingRegex("InvalidFileName.java".toRegex(), project)
-
-        assertThat(result).isEmpty()
-    }
-
-    @Test
-    fun `should return empty list if no virtualfile available for any files that match regex`() {
-        every { intellijFileSystemService.findVirtualFileByFilename(fileName, project) } returns null
-
-        val result = target.findFilesMatchingRegex(fileName.toRegex(), project)
-
-        assertThat(result).isEmpty()
-    }
-
-    @Test
-    fun `should return empty list if code in virtualfiles that match regex is unsupported by the injected parsers`() {
-        every { psiManager.findFile(virtualFile) } returns unsupportedFile
-
-        val result = target.findFilesMatchingRegex(fileName.toRegex(), project)
-
-        assertThat(result).isEmpty()
-    }
-
-    @Test
-    fun `should return empty list if there is no underlying code file in files that match regex`() {
-        every { psiManager.findFile(virtualFile) } returns null
-
-        val result = target.findFilesMatchingRegex(fileName.toRegex(), project)
-
-        assertThat(result).isEmpty()
+            assertThat(result).isEmpty()
+        }
     }
 }

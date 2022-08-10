@@ -24,4 +24,8 @@ abstract class AssistantViewFile(val psiFile: PsiFile, val project: Project) {
     protected abstract fun getClassesFromFile(): List<AssistantViewClass>
 
     override fun toString() = fileName
+
+    override fun equals(other: Any?) = other is AssistantViewFile && this.psiFile == other.psiFile
+
+    override fun hashCode() = psiFile.hashCode()
 }

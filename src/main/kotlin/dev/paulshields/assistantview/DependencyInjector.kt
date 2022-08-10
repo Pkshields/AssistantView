@@ -7,12 +7,13 @@ import dev.paulshields.assistantview.factories.CodeEditorDocumentFactory
 import dev.paulshields.assistantview.factories.CodeEditorFactory
 import dev.paulshields.assistantview.factories.ToolWindowUIFactory
 import dev.paulshields.assistantview.factories.intellij.IntellijSingletons
-import dev.paulshields.assistantview.services.FileOpenerService
 import dev.paulshields.assistantview.services.AssistantViewService
 import dev.paulshields.assistantview.services.CounterpartFileService
 import dev.paulshields.assistantview.services.FileManagerService
+import dev.paulshields.assistantview.services.FileOpenerService
 import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 import dev.paulshields.assistantview.services.intellij.IntellijFileSystemService
+import dev.paulshields.assistantview.services.intellij.IntellijProjectLocator
 import dev.paulshields.lok.logInfo
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -23,10 +24,11 @@ class DependencyInjector : AppLifecycleListener {
 
         single { IntellijFileSystemService() }
         single { IntellijExtensionPoints() }
+        single { IntellijProjectLocator() }
         single { FileOpenerService(get(), get(), get(), get()) }
         single { AssistantViewService() }
         single { CounterpartFileService(get(), get()) }
-        single { FileManagerService(get(), get()) }
+        single { FileManagerService(get(), get(), get()) }
 
         single { IntellijSingletons() }
         single { CodeEditorDocumentFactory() }

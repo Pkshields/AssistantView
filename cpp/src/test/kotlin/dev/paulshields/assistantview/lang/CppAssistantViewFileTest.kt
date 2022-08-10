@@ -3,7 +3,9 @@ package dev.paulshields.assistantview.lang
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import assertk.assertions.isNull
+import assertk.assertions.isTrue
 import com.intellij.openapi.project.Project
 import com.jetbrains.cidr.lang.psi.impl.OCFileImpl
 import com.jetbrains.cidr.lang.symbols.cpp.OCStructSymbol
@@ -65,5 +67,20 @@ class CppAssistantViewFileTest {
     @Test
     fun `should print name when calling tostring`() {
         assertThat(target.toString()).isEqualTo(fileName)
+    }
+
+    @Test
+    fun `should correctly compare two assistant view files with the same underlying files`() {
+        val sameFile = CppAssistantViewFile(file, project)
+
+        assertThat(target == sameFile).isTrue()
+    }
+
+    @Test
+    fun `should correctly fail to compare two different assistant view files`() {
+        val differentRawFile = mock<OCFileImpl>()
+        val differentFile = CppAssistantViewFile(differentRawFile, project)
+
+        assertThat(target == differentFile).isFalse()
     }
 }

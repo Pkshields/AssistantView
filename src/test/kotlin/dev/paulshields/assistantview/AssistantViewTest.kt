@@ -1,5 +1,8 @@
 package dev.paulshields.assistantview
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNull
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
@@ -87,5 +90,47 @@ class AssistantViewTest {
         target.dispose()
 
         verify { codeEditorFactory.destroyEditor(editor) }
+    }
+
+    @Test
+    fun `should destroy editor when assistant view is reset`() {
+        target.openFile(assistantViewFile)
+        target.reset()
+
+        verify {
+            toolWindow.contentManager.removeAllContents(any())
+            codeEditorFactory.destroyEditor(editor)
+        }
+    }
+
+    @Test
+    fun `should reset to default startup assistant view content when assistant view is reset`() {
+        val expectedContent = mock<Content>()
+        every { toolWindowUIFactory.createStartupAssistantViewContent() } returns expectedContent
+
+        target.openFile(assistantViewFile)
+        target.reset()
+
+        verify { toolWindow.contentManager.addContent(expectedContent) }
+    }
+
+    @Test
+    fun `should not have an opened file when first created`() {
+        assertThat(target.currentFile).isNull()
+    }
+
+    @Test
+    fun `should store the currently opened file when a file is opened`() {
+        target.openFile(assistantViewFile)
+
+        assertThat(target.currentFile).isEqualTo(assistantViewFile)
+    }
+
+    @Test
+    fun `should not have an opened file when assistant view is reset`() {
+        target.openFile(assistantViewFile)
+        target.reset()
+
+        assertThat(target.currentFile).isNull()
     }
 }
