@@ -34,11 +34,11 @@ class CounterpartFileService(
     }
 
     private fun findFileFromExtendsClasses(file: AssistantViewFile): AssistantViewFile? {
-        val extendsClass = file.mainClass?.let {
-            it.superClasses.firstOrNull() ?: it.interfaces.firstOrNull()
+        val extendsClasses = file.mainClass?.let {
+            it.superClasses + it.interfaces
         }
 
-        return extendsClass?.let { fileManagerService.getFileFromClass(it) }
+        return extendsClasses?.firstNotNullOfOrNull { fileManagerService.getFileFromClass(it) }
     }
 
     private fun findUnitTestForFile(file: AssistantViewFile) =

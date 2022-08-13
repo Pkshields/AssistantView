@@ -53,7 +53,7 @@ class CounterpartFileServiceTest {
 
         val result = target.findCounterpartFile(file)
 
-        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+        verifyResultIsNullAndCounterpartFileAlgorithmWasFollowedInOrder(result)
     }
 
     @Test
@@ -62,7 +62,7 @@ class CounterpartFileServiceTest {
 
         val result = target.findCounterpartFile(file)
 
-        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+        verifyResultIsNullAndCounterpartFileAlgorithmWasFollowedInOrder(result)
     }
 
     @Test
@@ -82,7 +82,7 @@ class CounterpartFileServiceTest {
 
         val result = target.findCounterpartFile(file)
 
-        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+        verifyResultIsNullAndCounterpartFileAlgorithmWasFollowedInOrder(result)
     }
 
     @Test
@@ -92,7 +92,7 @@ class CounterpartFileServiceTest {
 
         val result = target.findCounterpartFile(file)
 
-        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+        verifyResultIsNullAndCounterpartFileAlgorithmWasFollowedInOrder(result)
     }
 
     @Test
@@ -102,7 +102,7 @@ class CounterpartFileServiceTest {
 
         val result = target.findCounterpartFile(file)
 
-        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+        verifyResultIsNullAndCounterpartFileAlgorithmWasFollowedInOrder(result)
     }
 
     @Test
@@ -111,7 +111,7 @@ class CounterpartFileServiceTest {
 
         val result = target.findCounterpartFile(file)
 
-        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+        verifyResultIsNullAndCounterpartFileAlgorithmWasFollowedInOrder(result)
     }
 
     @Test
@@ -130,6 +130,20 @@ class CounterpartFileServiceTest {
         val firstInterface = mock<AssistantViewClass>()
         every { file.mainClass?.interfaces } returns listOf(firstInterface)
         every { fileManagerService.getFileFromClass(firstInterface) } returns counterpartFile
+
+        val result = target.findCounterpartFile(file)
+
+        assertThat(result).isEqualTo(counterpartFile)
+    }
+
+    @Test
+    fun `should return interface as counterpart class if super class file can not be resolved`() {
+        val superClass = mock<AssistantViewClass>()
+        val firstInterface = mock<AssistantViewClass>()
+        every { fileManagerService.getFileFromClass(superClass) } returns null
+        every { fileManagerService.getFileFromClass(firstInterface) } returns counterpartFile
+        every { file.mainClass?.superClasses } returns listOf(superClass)
+        every { file.mainClass?.interfaces } returns listOf(firstInterface)
 
         val result = target.findCounterpartFile(file)
 
@@ -172,7 +186,7 @@ class CounterpartFileServiceTest {
 
         val result = target.findCounterpartFile(file)
 
-        verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result)
+        verifyResultIsNullAndCounterpartFileAlgorithmWasFollowedInOrder(result)
     }
 
     @Test
@@ -182,7 +196,7 @@ class CounterpartFileServiceTest {
         assertThat(result).isNull()
     }
 
-    private fun verifyResultIsNullAndCounterpartFileAlgorithmWAsFollowedInOrder(result: AssistantViewFile?) {
+    private fun verifyResultIsNullAndCounterpartFileAlgorithmWasFollowedInOrder(result: AssistantViewFile?) {
         assertThat(result).isNull()
 
         verify(ordering = Ordering.ORDERED) {

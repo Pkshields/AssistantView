@@ -24,10 +24,17 @@ import org.junit.jupiter.api.Test
 class FileManagerServiceTest {
     private val virtualFile = mock<VirtualFile>()
     private val assistantViewFile = mock<AssistantViewFile>()
-    private val supportedFile = mock<PsiFile>()
-    private val unsupportedFile = mock<PsiFile>()
     private val name = "KotlinFile"
     private val fileName = "$name.kt"
+    private val supportedFile = mock<PsiFile>().apply {
+        every { isWritable } returns true
+    }
+    private val unsupportedFile = mock<PsiFile>().apply {
+        every { isWritable } returns true
+    }
+    private val nonWritableFile = mock<PsiFile>().apply {
+        every { isWritable } returns false
+    }
 
     private val psiManager = mock<PsiManager>().apply {
         every { findFile(virtualFile) } returns supportedFile
@@ -70,6 +77,15 @@ class FileManagerServiceTest {
         }
 
         @Test
+        fun `should return null if file is non writable`() {
+            every { psiManager.findFile(virtualFile) } returns nonWritableFile
+
+            val result = target.getFileFromVirtualFile(virtualFile, project)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
         fun `should return null if code in virtualfile is unsupported by injected parsers`() {
             every { psiManager.findFile(virtualFile) } returns unsupportedFile
 
@@ -107,6 +123,15 @@ class FileManagerServiceTest {
         }
 
         @Test
+        fun `should return null if file is non writable`() {
+            every { psiManager.findFile(virtualFile) } returns nonWritableFile
+
+            val result = target.getFileFromVirtualFile(virtualFile)
+
+            assertThat(result).isNull()
+        }
+
+        @Test
         fun `should return null if code in virtualfile is unsupported by injected parsers`() {
             every { psiManager.findFile(virtualFile) } returns unsupportedFile
 
@@ -135,8 +160,8 @@ class FileManagerServiceTest {
         }
 
         @Test
-        fun `should return null if the class is unsupported`() {
-            every { psiManager.findFile(virtualFile) } returns unsupportedFile
+        fun `should return null if the class has no file in current project`() {
+            every { assistantViewClass.containingFile } returns null
 
             val result = target.getFileFromClass(assistantViewClass)
 
@@ -144,8 +169,8 @@ class FileManagerServiceTest {
         }
 
         @Test
-        fun `should return null if the class has no file in current project`() {
-            every { assistantViewClass.containingFile } returns null
+        fun `should return null if the class is unsupported`() {
+            every { psiManager.findFile(virtualFile) } returns unsupportedFile
 
             val result = target.getFileFromClass(assistantViewClass)
 
@@ -176,6 +201,17 @@ class FileManagerServiceTest {
             val result = target.findFileWithName("InvalidFileName", project)
 
             assertThat(result).isNull()
+        }
+
+        @Test
+        fun `should ignore first file name found if file can not be found or parsed`() {
+            val nonWritableFileName = "$name.java"
+            every { intellijFileSystemService.getAllFilenames(project) } returns listOf(nonWritableFileName, fileName)
+            every { intellijFileSystemService.findVirtualFileByFilename(nonWritableFileName, project) } returns null
+
+            val result = target.findFileWithName(name, project)
+
+            assertThat(result).isEqualTo(assistantViewFile)
         }
 
         @Test

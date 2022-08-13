@@ -8,6 +8,7 @@ import dev.paulshields.assistantview.lang.AssistantViewFile
 import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 import dev.paulshields.assistantview.services.intellij.IntellijFileSystemService
 import dev.paulshields.assistantview.services.intellij.IntellijProjectLocator
+import dev.paulshields.lok.logDebug
 import dev.paulshields.lok.logWarn
 
 class FileManagerService(
@@ -20,10 +21,15 @@ class FileManagerService(
     fun getFileFromVirtualFile(virtualFile: VirtualFile, project: Project): AssistantViewFile? {
         val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
 
+        if (psiFile?.isWritable == false) {
+            logDebug { "File ${psiFile.name} has been ignored as it is not writable." }
+            return null
+        }
+
         return psiFile?.let {
             sourceFileInterpreters.firstNotNullOfOrNull { it.parseFile(psiFile, project) }
         } ?: run {
-            logWarn { "File type for file ${psiFile?.name} is not supported by Assistant View." }
+            logDebug { "File type for file ${psiFile?.name} is not supported by Assistant View." }
             null
         }
     }
@@ -36,7 +42,7 @@ class FileManagerService(
         clazz.containingFile?.let {
             getFileFromVirtualFile(it, clazz.project)
         } ?: run {
-            logWarn { "Could not find the file containing the class ${clazz.name} in the project." }
+            logWarn { "Could not find or open the file containing the class ${clazz.name} in the project." }
             null
         }
 
@@ -45,8 +51,8 @@ class FileManagerService(
 
         return intellijFileSystemService
             .getAllFilenames(project)
-            .firstOrNull { it.startsWith(stringToMatch) }
-            ?.let { getAssistantViewFileFromFileName(it, project) }
+            .filter { it.startsWith(stringToMatch) }
+            .firstNotNullOfOrNull { getAssistantViewFileFromFileName(it, project) }
     }
 
     fun findFilesMatchingRegex(regex: Regex, project: Project) =
