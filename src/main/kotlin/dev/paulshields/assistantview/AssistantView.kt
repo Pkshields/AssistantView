@@ -34,6 +34,7 @@ class AssistantView(
             openNewEditor(it)
         }
         currentFile = assistantViewFile
+        toolWindow.title = currentFile?.fileName
     }
 
     fun reset() {
@@ -41,6 +42,7 @@ class AssistantView(
 
         clearToolWindow()
         addDefaultAssistantViewContentToToolWindow()
+        toolWindow.title = null
         currentFile = null
         editor = null
     }

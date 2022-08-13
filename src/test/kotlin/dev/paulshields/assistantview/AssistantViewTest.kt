@@ -16,9 +16,12 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 class AssistantViewTest {
-    private val assistantViewFile = mock<AssistantViewFile>()
+    private val assistantViewFileName = "BigClass.kt"
     private val editor = mock<Editor>()
     private val content = mock<Content>()
+    private val assistantViewFile = mock<AssistantViewFile>().apply {
+        every { fileName } returns assistantViewFileName
+    }
 
     private val toolWindow = mock<ToolWindow>()
     private val project = mock<Project>()
@@ -84,6 +87,13 @@ class AssistantViewTest {
     }
 
     @Test
+    fun `should set tool window title when file is opened`() {
+        target.openFile(assistantViewFile)
+
+        verify { toolWindow.title = assistantViewFileName }
+    }
+
+    @Test
     fun `should destroy editor when assistant view is disposed`() {
         target.openFile(assistantViewFile)
 
@@ -112,6 +122,13 @@ class AssistantViewTest {
         target.reset()
 
         verify { toolWindow.contentManager.addContent(expectedContent) }
+    }
+
+    @Test
+    fun `should clear tool window title when assistant view is reset`() {
+        target.reset()
+
+        verify { toolWindow.title = null }
     }
 
     @Test
