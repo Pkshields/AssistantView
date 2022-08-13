@@ -9,6 +9,7 @@ import dev.paulshields.assistantview.services.intellij.IntellijExtensionPoints
 import dev.paulshields.assistantview.services.intellij.IntellijFileSystemService
 import dev.paulshields.assistantview.services.intellij.IntellijProjectLocator
 import dev.paulshields.lok.logDebug
+import dev.paulshields.lok.logInfo
 import dev.paulshields.lok.logWarn
 
 class FileManagerService(
@@ -17,6 +18,12 @@ class FileManagerService(
     intellijExtensionPoints: IntellijExtensionPoints) {
 
     private val sourceFileInterpreters = intellijExtensionPoints.sourceFileInterpreters.extensionList
+
+    init {
+        sourceFileInterpreters.forEach {
+            logInfo { "Registering ${it::class.simpleName} as a source file interpreter." }
+        }
+    }
 
     fun getFileFromVirtualFile(virtualFile: VirtualFile, project: Project): AssistantViewFile? {
         val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
