@@ -13,7 +13,6 @@ val intellijPlugins: String by project
 val intellijLocalPath: String? by project
 
 val intellijMinimumBuildNumber: String by project
-val intellijLatestBuildNumber: String by project
 
 val detektConfigFile = files("detekt-config.yml")
 
