@@ -1,144 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="13"
-   height="13"
-   viewBox="0 0 13 13"
-   version="1.1"
-   id="svg209"
-   sodipodi:docname="AssistantViewToolWindow.svg"
-   inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <defs
-     id="defs213" />
-  <sodipodi:namedview
-     id="namedview211"
-     pagecolor="#ffffff"
-     bordercolor="#999999"
-     borderopacity="1"
-     inkscape:pageshadow="0"
-     inkscape:pageopacity="0"
-     inkscape:pagecheckerboard="0"
-     showgrid="false"
-     inkscape:zoom="39.128295"
-     inkscape:cx="6.5170231"
-     inkscape:cy="6.1720042"
-     inkscape:window-width="1387"
-     inkscape:window-height="847"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg209"
-     showguides="true"
-     inkscape:guide-bbox="true">
-    <sodipodi:guide
-       position="6.5,13.429838"
-       orientation="-1,0"
-       id="guide972"
-       inkscape:label=""
-       inkscape:locked="false"
-       inkscape:color="rgb(0,0,255)" />
-    <sodipodi:guide
-       position="6,11.933604"
-       orientation="-1,0"
-       id="guide832"
-       inkscape:label=""
-       inkscape:locked="false"
-       inkscape:color="rgb(0,0,255)" />
-    <sodipodi:guide
-       position="1.1704345,10.268986"
-       orientation="0,-1"
-       id="guide834" />
-    <sodipodi:guide
-       position="7,11.205334"
-       orientation="-1,0"
-       id="guide998"
-       inkscape:label=""
-       inkscape:locked="false"
-       inkscape:color="rgb(0,0,255)" />
-  </sodipodi:namedview>
-  <title
-     id="title187">Virtual Reality icons</title>
-  <ellipse
-     cx="6.4990678"
-     cy="2.7364259"
-     rx="3.4800763"
-     ry="1.9945188"
-     fill="none"
-     stroke="#47caf3"
-     stroke-miterlimit="10"
-     stroke-width="0.470426"
-     id="ellipse191"
-     style="stroke:#6b6b6b;stroke-width:1.45313;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
-  <ellipse
-     cx="5.3934407"
-     cy="2.7393539"
-     rx="0.60720986"
-     ry="0.61935401"
-     fill="#47caf3"
-     id="ellipse197"
-     style="fill:#6b6b6b;fill-opacity:1;stroke-width:0.604932;stroke-miterlimit:10;stroke-dasharray:none" />
-  <ellipse
-     cx="7.6072097"
-     cy="2.7393539"
-     rx="0.60720986"
-     ry="0.61935401"
-     fill="#47caf3"
-     id="ellipse197-8"
-     style="fill:#6b6b6b;fill-opacity:1;stroke-width:0.604932;stroke-miterlimit:10;stroke-dasharray:none" />
-  <path
-     d="m 9.9791424,10.275142 c 0,1.100574 -1.5573327,1.994518 -3.480075,1.994518 -1.9227424,0 -3.4800764,-0.893944 -3.4800764,-1.994518"
-     fill="none"
-     stroke="#47caf3"
-     stroke-miterlimit="10"
-     stroke-width="0.470426"
-     id="path201"
-     style="stroke:#6b6b6b;stroke-width:1.45313;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
-  <line
-     x1="3.0189905"
-     y1="10.275141"
-     x2="3.0189905"
-     y2="2.5145712"
-     fill="none"
-     stroke="#47caf3"
-     stroke-miterlimit="10"
-     stroke-width="0.470426"
-     id="line203"
-     style="stroke:#6b6b6b;stroke-width:1.45313;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
-  <line
-     x1="9.9791422"
-     y1="10.275141"
-     x2="9.9791422"
-     y2="2.5145712"
-     fill="none"
-     stroke="#47caf3"
-     stroke-miterlimit="10"
-     stroke-width="0.470426"
-     id="line205"
-     style="stroke:#6b6b6b;stroke-width:1.45313;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
-  <line
-     x1="9.9791422"
-     y1="8.5003023"
-     x2="3.0189905"
-     y2="8.5003023"
-     fill="none"
-     stroke="#47caf3"
-     stroke-miterlimit="10"
-     stroke-width="0.470426"
-     id="line207"
-     style="stroke:#6b6b6b;stroke-width:1.45313;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
-  <metadata
-     id="metadata970">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:title>Virtual Reality icons</dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 13 13" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs/>
+<g id="LightThemes" vectornator:layerName="LightThemes">
+<path d="M3.02 2.73452C3.02 1.63298 4.57808 0.74 6.50008 0.74C8.42207 0.74 9.98015 1.63298 9.98015 2.73452C9.98015 3.83606 8.42207 4.72904 6.50008 4.72904C4.57808 4.72904 3.02 3.83606 3.02 2.73452Z" fill="none" opacity="1" stroke="#6b6b6b" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1.45"/>
+<path d="M4.78724 2.73745C4.78724 2.39539 5.0591 2.11809 5.39445 2.11809C5.7298 2.11809 6.00166 2.39539 6.00166 2.73745C6.00166 3.07951 5.7298 3.3568 5.39445 3.3568C5.0591 3.3568 4.78724 3.07951 4.78724 2.73745Z" fill="#6b6b6b" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M7.00101 2.73745C7.00101 2.39539 7.27287 2.11809 7.60822 2.11809C7.94357 2.11809 8.21543 2.39539 8.21543 2.73745C8.21543 3.07951 7.94357 3.3568 7.60822 3.3568C7.27287 3.3568 7.00101 3.07951 7.00101 2.73745Z" fill="#6b6b6b" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M9.98015 10.2732C9.98015 11.3738 8.42282 12.2678 6.50008 12.2678C4.57733 12.2678 3.02 11.3738 3.02 10.2732" fill="none" opacity="1" stroke="#6b6b6b" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1.45"/>
+<path d="M3.02 10.2732L3.02 2.51266" fill="none" opacity="1" stroke="#6b6b6b" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1.45"/>
+<path d="M9.98015 2.51266L9.98015 10.2732" fill="none" opacity="1" stroke="#6b6b6b" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1.45"/>
+<path d="M9.98015 8.4984L3.02 8.4984" fill="none" opacity="1" stroke="#6b6b6b" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1.45"/>
+</g>
 </svg>
