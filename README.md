@@ -1,6 +1,6 @@
 # Assistant View
 
-![CI Status Badge](https://github.com/Pkshields/AssistantView/actions/workflows/ci.yml/badge.svg)
+[![CI Status Badge](https://github.com/Pkshields/AssistantView/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Pkshields/AssistantView/actions)
 
 Assistant View is a second code editor that aims to show you files that are contextually helpful, based on the file you are currently working on.
 
