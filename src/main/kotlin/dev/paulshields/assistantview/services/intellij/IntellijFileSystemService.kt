@@ -8,5 +8,5 @@ class IntellijFileSystemService {
     fun getAllFilenames(project: Project) = FilenameIndex.getAllFilenames(project).filter { !it.endsWith(".class") }
 
     fun findVirtualFileByFilename(name: String, project: Project) =
-        FilenameIndex.getVirtualFilesByName(project, name, GlobalSearchScope.allScope(project)).firstOrNull()
+        FilenameIndex.getVirtualFilesByName(name, GlobalSearchScope.allScope(project)).firstOrNull()
 }

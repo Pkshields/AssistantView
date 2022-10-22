@@ -39,7 +39,7 @@ class AssistantViewTest {
         val expectedContent = mock<Content>()
         every { toolWindowUIFactory.createStartupAssistantViewContent() } returns expectedContent
 
-        val target = AssistantView(toolWindowUIFactory, codeEditorFactory, toolWindow, project)
+        AssistantView(toolWindowUIFactory, codeEditorFactory, toolWindow, project)
 
         verify { toolWindow.contentManager.addContent(expectedContent) }
     }
