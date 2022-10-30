@@ -5,7 +5,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.KtlintPlugin
 
 group = "dev.paulshields.assistantview"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 val intellijType: String by project
 val intellijTargetVersion: String by project
@@ -36,6 +36,13 @@ intellij {
     } else {
         localPath.set(intellijLocalPath)
     }
+}
+
+// Keys are obviously not in the repo.
+tasks.signPlugin {
+    certificateChain.set(File("signing-keys/cert_chain.crt").readText())
+    privateKey.set(File("signing-keys/key_private.pem").readText())
+    password.set(System.getenv("ASSISTANT_VIEW_PRIVATE_KEY_PASSWORD"))
 }
 
 tasks.patchPluginXml {
@@ -79,7 +86,7 @@ allprojects {
     }
 
     dependencies {
-        implementation("dev.paulshields:lok:1.0")
+        implementation("dev.paulshields:lok:1.1")
         implementation("io.insert-koin:koin-core:3.2.2")
 
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
