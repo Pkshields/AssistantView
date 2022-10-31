@@ -5,7 +5,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.KtlintPlugin
 
 group = "dev.paulshields.assistantview"
-version = "1.0"
+version = "1.1-SNAPSHOT"
 
 val intellijType: String by project
 val intellijTargetVersion: String by project
@@ -40,9 +40,9 @@ intellij {
 
 // Keys are obviously not in the repo.
 tasks.signPlugin {
-    certificateChain.set(File("signing-keys/cert_chain.crt").readText())
-    privateKey.set(File("signing-keys/key_private.pem").readText())
-    password.set(System.getenv("ASSISTANT_VIEW_PRIVATE_KEY_PASSWORD"))
+    certificateChain.set(System.getenv("ASSISTANT_VIEW_CERT_CHAIN") ?: File("signing-keys/cert_chain.crt").readText())
+    privateKey.set(System.getenv("ASSISTANT_VIEW_SIGNING_KEY") ?: File("signing-keys/key_private.pem").readText())
+    password.set(System.getenv("ASSISTANT_VIEW_SIGNING_KEY_PASSWORD"))
 }
 
 tasks.patchPluginXml {

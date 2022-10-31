@@ -2,7 +2,7 @@
     <id>dev.paulshields.assistantview</id>
     <name>Assistant View</name>
     <vendor url="https://paulshields.dev">Paul Shields</vendor>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <description><![CDATA[
     <p>Assistant View is a split-view second code editor that aims to show you files that are contextually helpful, based on the file you are currently working on.</p>
