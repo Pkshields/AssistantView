@@ -5,10 +5,14 @@
     <version>1.1-SNAPSHOT</version>
 
     <description><![CDATA[
-    <p>Assistant View is a split-view second code editor that aims to show you files that are contextually helpful, based on the file you are currently working on.</p>
-    <h1>Usage</h1>
+    <p>Assistant View is a split-view second code editor that aims to show you files that are contextually helpful, based on the file you are currently working on!</p>
+    <h4>Usage</h4>
     <p>Once installed, the Assistant View window will be available in the tool window list on the right hand side of your IDE, or under View >> Tool Windows >> Assistant View.</p>
-    <p>Once Assistant View is open, that's it! Navigate around your codebase and Assistant View will do its best trying to open files that it thinks will be helpful to you.</p>
+    <h4>Links</h4>
+    <ul>
+        <li><a href="https://github.com/Pkshields/AssistantView/issues">Issue Tracker</a></li>
+        <li><a href="https://github.com/Pkshields/AssistantView">Source Code</a></li>
+    </ul>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
