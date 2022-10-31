@@ -9,6 +9,10 @@ on:
 jobs:
   build-and-test-plugin:
     runs-on: ubuntu-latest
+    env:
+      ASSISTANT_VIEW_CERT_CHAIN: ${{ secrets.ASSISTANT_VIEW_CERT_CHAIN }}
+      ASSISTANT_VIEW_SIGNING_KEY: ${{ secrets.ASSISTANT_VIEW_SIGNING_KEY }}
+      ASSISTANT_VIEW_SIGNING_KEY_PASSWORD: ${{ secrets.ASSISTANT_VIEW_SIGNING_KEY_PASSWORD }}
 
     steps:
       # Deletable toolchain directories taken from https://github.com/easimon/maximize-build-space
