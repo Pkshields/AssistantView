@@ -20,7 +20,7 @@ Assistant View is an IDE plugin that supports...
 
 ## Installation
 
-COMING SOON
+You can search for ***Assistant View*** in the Plugins Marketplace within your IDE of choice, or you can [visit the JetBrains Marketplace](https://plugins.jetbrains.com/plugin/20283-assistant-view) directly and install it from there. 
 
 ## Usage
 
